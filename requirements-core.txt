@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# requirements-core.txt
+# Minimal pinned dependencies for the LLM Starter Course notebooks.
+# Install with:  pip install -r requirements-core.txt
+#
+# For a fully reproducible environment with every transitive dependency pinned,
+# use requirements.txt instead.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Google Generative AI ─────────────────────────────────────────────────────
+google-genai==2.11.0          # Gemini / Gemma API SDK (core of every module)
+
+# ── Environment & config ─────────────────────────────────────────────────────
+python-dotenv==1.2.2          # Load GEMINI_API_KEY from .env file
+
+# ── Jupyter environment ───────────────────────────────────────────────────────
+jupyter==1.1.1                # Meta-package: notebook + console + qtconsole
+jupyterlab==4.6.1             # Modern notebook UI
+ipykernel==7.3.0              # Python kernel for Jupyter
+nbconvert==7.17.1             # Execute & export notebooks to other formats
+
+# ── Data & numerics ──────────────────────────────────────────────────────────
+numpy==2.5.1                  # Embedding vector operations (faster cosine similarity)
+pandas==3.0.3                 # Structured output / tabular data exploration
+
+# ── Visualisation ────────────────────────────────────────────────────────────
+matplotlib==3.11.0            # Plot temperature sweeps, token counts, similarity matrices
+
+# ── Image handling ───────────────────────────────────────────────────────────
+Pillow==12.3.0                # Open, resize, and preprocess images for the vision module
+requests==2.34.2              # Fetch images / external resources over HTTP
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+tqdm==4.68.4                  # Progress bars for embedding loops and batch API calls
+
+# ── Interactive app (experiments) ────────────────────────────────────────────
+gradio==6.20.0                # Build streaming chatbot UIs (Key Takeaways experiment #6)
+
+# ── Vector database (RAG Module) ─────────────────────────────────────────────
+chromadb==1.5.9               # In-memory / persistent vector DB for RAG notebooks 03 & 04
