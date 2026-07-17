@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import { ArrowLeftRight, MapPin, Calendar, Clock, Star, Zap, Search } from 'lucide-react';
-import { POPULAR_STATIONS } from '../../data';
+
+const POPULAR_STATIONS = [
+  'Grand Central Terminal',
+  'Penn Station',
+  'JFK Airport Terminal 4',
+  'Times Square Transit Hub',
+  'Brooklyn Heights',
+  'Central Park West',
+  'Wall Street Plaza',
+  'Hoboken Terminal',
+  'LaGuardia Airport',
+  'Williamsburg Bridge Plaza'
+];
 
 interface JourneyFormProps {
   onSearch: (from: string, to: string, options: SearchOptions) => void;

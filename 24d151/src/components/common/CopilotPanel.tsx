@@ -1,15 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatMessage } from '../../types';
-import { INITIAL_CHAT } from '../../data';
-import { Send, Sparkles, X, Compass, ChevronRight, MessageSquare, AlertCircle } from 'lucide-react';
+import { Bot, Send, Sparkles, X, Loader2 } from 'lucide-react';
+import { ChatMessage, RouteOption } from '../../types';
+
+const INITIAL_CHAT: ChatMessage[] = [
+  {
+    id: 'msg-1',
+    sender: 'copilot',
+    text: "Hi! I'm your Smart Transit Copilot. I can help you find the best routes, analyze delays, or optimize your commute. What would you like to know?",
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    suggestions: [
+      "Fastest way to JFK Airport?",
+      "Why is my train delayed?",
+      "Cheapest eco-friendly route?"
+    ]
+  }
+];
 
 interface CopilotPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  contextRoute?: RouteOption;
   onSelectSuggestedRoute: (from: string, to: string) => void;
 }
 
-export default function CopilotPanel({ isOpen, onClose, onSelectSuggestedRoute }: CopilotPanelProps) {
+export default function CopilotPanel({ isOpen, onClose, contextRoute, onSelectSuggestedRoute }: CopilotPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_CHAT);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);

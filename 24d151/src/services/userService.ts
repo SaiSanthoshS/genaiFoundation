@@ -1,17 +1,16 @@
 import apiClient from './apiClient';
 import { HistoryItem, AnalyticsData } from '../types';
-import { MOCK_HISTORY } from '../data/mocks/history';
-import { MOCK_ANALYTICS } from '../data/mocks/analytics';
 
+// The backend doesn't explicitly have /user endpoints yet, but we will keep this file stubbed 
+// to prevent breaking Profile and Analytics which we updated earlier.
 export const userService = {
   getHistory: async (): Promise<HistoryItem[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_HISTORY), 700);
-    });
+    return [];
   },
   getAnalytics: async (): Promise<AnalyticsData> => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_ANALYTICS), 900);
-    });
+    return {
+      efficiencyScore: 0, moneySaved: 0, co2SavedTotal: 0, totalKm: 0, tripsCount: 0,
+      weeklyFootprint: [], modeUsage: []
+    };
   }
 };

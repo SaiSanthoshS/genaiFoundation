@@ -1,21 +1,20 @@
 import apiClient from './apiClient';
 import { RouteOption } from '../types';
-import { MOCK_ROUTES } from '../data/mocks/routes';
-import { POPULAR_STATIONS } from '../data/mocks/stations';
 
 export const journeyService = {
-  searchRoutes: async (from: string, to: string): Promise<RouteOption[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const isAirport = to.toLowerCase().includes('jfk') || from.toLowerCase().includes('jfk');
-        const routes = isAirport ? MOCK_ROUTES.specific : MOCK_ROUTES.default;
-        resolve(routes);
-      }, 1000);
+  searchRoutes: async (fromStation: string, toStation: string): Promise<RouteOption[]> => {
+    const response = await apiClient.post('/journey/plan', {
+      origin: fromStation,
+      destination: toStation,
+      ecoFriendly: true,
+      avoidCrowds: false,
+      cheapest: false,
+      fastest: true
     });
+    return response.data;
   },
   getPopularStations: async (): Promise<string[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(POPULAR_STATIONS), 300);
-    });
+    // We don't have a backend route for stations yet, so we return a default list
+    return ['Grand Central Terminal', 'Penn Station', 'JFK Airport Terminal 4', 'Times Square Transit Hub', 'Brooklyn Heights', 'Central Park West', 'Wall Street Plaza', 'Hoboken Terminal', 'LaGuardia Airport', 'Williamsburg Bridge Plaza'];
   }
 };
