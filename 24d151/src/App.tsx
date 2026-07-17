@@ -30,6 +30,17 @@ const INITIAL_USER = {
 export default function App() {
   const [selectedRoute, setSelectedRoute] = useState<RouteOption | undefined>(undefined);
   const [reminders, setReminders] = useState<Reminder[]>([]);
+  
+  const refreshReminders = async () => {
+    try {
+      const data = await reminderService.getReminders();
+      setReminders(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
+  useNotifications(reminders, refreshReminders);
   const [user, setUser] = useState(INITIAL_USER);
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [plannerFrom, setPlannerFrom] = useState('');
@@ -173,7 +184,7 @@ export default function App() {
 
             <Route path="/reminder" element={
               <Suspense fallback={<FallbackLoader />}>
-                <ReminderPage onAddReminder={handleAddReminder} />
+                <ReminderPage />
               </Suspense>
             } />
 

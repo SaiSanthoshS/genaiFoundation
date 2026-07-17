@@ -106,6 +106,7 @@ export default function CopilotPanel({ isOpen, onClose, contextRoute, onSelectSu
 
         <button 
           onClick={onClose}
+          aria-label="Close Copilot"
           className="p-1.5 rounded-full hover:bg-slate-900 transition-all text-slate-400 hover:text-white border border-slate-800/60"
         >
           <X className="w-5 h-5" />
@@ -194,6 +195,7 @@ export default function CopilotPanel({ isOpen, onClose, contextRoute, onSelectSu
           />
           <button
             type="submit"
+            aria-label="Send message"
             className="w-11 h-11 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 hover:bg-blue-700 transition-all"
           >
             <Send className="w-4 h-4" />

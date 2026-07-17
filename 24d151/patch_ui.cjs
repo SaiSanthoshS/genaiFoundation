@@ -1,4 +1,68 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+const path = require('path');
+
+const srcDir = path.join(__dirname, 'src');
+
+// 1. Update Profile.tsx to show active reminders
+const profilePath = path.join(srcDir, 'pages', 'Profile.tsx');
+let profileContent = fs.readFileSync(profilePath, 'utf8');
+
+if (!profileContent.includes('reminderService')) {
+  profileContent = profileContent.replace("import { userService } from '../services/userService';", "import { userService } from '../services/userService';\nimport { reminderService } from '../services/reminderService';\nimport { Reminder } from '../types';");
+  profileContent = profileContent.replace("const [loading, setLoading] = useState(true);", "const [loading, setLoading] = useState(true);\n  const [reminders, setReminders] = useState<Reminder[]>([]);");
+  
+  profileContent = profileContent.replace("userService.getHistory()", "Promise.all([userService.getHistory(), reminderService.getReminders()])");
+  profileContent = profileContent.replace(".then(setHistory)", ".then(([historyData, remindersData]) => {\n        setHistory(historyData);\n        setReminders(remindersData);\n      })");
+
+  const remindersSection = `
+      {/* Active Reminders Section */}
+      <div className="space-y-4">
+        <h3 className="font-bold text-lg text-on-surface flex items-center gap-2">
+          <Bell className="w-5 h-5 text-secondary" />
+          My Departure Reminders
+        </h3>
+        
+        {reminders.length === 0 ? (
+          <div className="p-6 rounded-2xl border border-outline-variant/30 text-center text-on-surface-variant bg-surface-low/30">
+            <p className="text-sm">You have no active reminders.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {reminders.map((rem) => (
+              <div key={rem.id} className="p-4 rounded-xl border border-outline-variant/30 bg-surface-low/30 flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={\`w-2 h-2 rounded-full \${rem.status === 'active' ? (rem.enabled ? 'bg-secondary' : 'bg-outline') : 'bg-primary'}\`} />
+                    <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">{rem.status}</span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface mb-0.5">{rem.routeName}</h4>
+                  <p className="text-xs text-outline font-medium">Departs at {rem.departureTime}</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded-md">
+                    -{rem.minutesBefore}m
+                  </span>
+                  <div className="text-[10px] mt-2 text-outline-variant font-semibold uppercase">{rem.repeat}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+  `;
+  profileContent = profileContent.replace('{/* Journey History List */}', remindersSection + '\n\n      {/* Journey History List */}');
+  fs.writeFileSync(profilePath, profileContent, 'utf8');
+}
+
+
+// 2. Update ReminderPage.tsx to allow configuring the new fields (repeat, enabled)
+const reminderPagePath = path.join(srcDir, 'pages', 'ReminderPage.tsx');
+let reminderPageContent = fs.readFileSync(reminderPagePath, 'utf8');
+
+// Replace ReminderPage to include full editing if we want, but since prompt says "Create, Edit, Delete, Enable/Disable", 
+// we should render a list of reminders at the bottom of ReminderPage, or replace the page to show active ones and allow creation.
+
+const fullReminderPageContent = `import React, { useState, useEffect } from 'react';
 import { AlarmClock, Check, Plus, Clock, Loader2, Trash2, Power } from 'lucide-react';
 import { RouteOption, Reminder } from '../types';
 import { journeyService } from '../services/journeyService';
@@ -179,10 +243,10 @@ export default function ReminderPage() {
         ) : (
           <div className="space-y-3">
             {reminders.map(rem => (
-              <div key={rem.id} className={`p-4 rounded-xl border transition-all flex items-center justify-between ${rem.enabled ? 'border-primary/30 bg-primary/5' : 'border-outline-variant/30 bg-surface-low opacity-60'}`}>
+              <div key={rem.id} className={\`p-4 rounded-xl border transition-all flex items-center justify-between \${rem.enabled ? 'border-primary/30 bg-primary/5' : 'border-outline-variant/30 bg-surface-low opacity-60'}\`}>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded flex items-center gap-1 ${rem.status === 'triggered' ? 'bg-error/10 text-error' : 'bg-secondary/10 text-secondary'}`}>
+                    <span className={\`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded flex items-center gap-1 \${rem.status === 'triggered' ? 'bg-error/10 text-error' : 'bg-secondary/10 text-secondary'}\`}>
                       <Clock className="w-3 h-3" />
                       {rem.status}
                     </span>
@@ -193,7 +257,7 @@ export default function ReminderPage() {
                 </div>
                 
                 <div className="flex gap-2">
-                  <button onClick={() => handleToggle(rem.id, rem.enabled || false)} className={`p-2.5 rounded-lg border ${rem.enabled ? 'bg-primary text-white border-primary' : 'bg-surface-low text-outline border-outline-variant'}`}>
+                  <button onClick={() => handleToggle(rem.id, rem.enabled || false)} className={\`p-2.5 rounded-lg border \${rem.enabled ? 'bg-primary text-white border-primary' : 'bg-surface-low text-outline border-outline-variant'}\`}>
                     <Power className="w-4 h-4" />
                   </button>
                   <button onClick={() => handleDelete(rem.id)} className="p-2.5 rounded-lg border border-error/20 bg-error/5 text-error hover:bg-error/10">
@@ -208,3 +272,12 @@ export default function ReminderPage() {
     </div>
   );
 }
+`;
+fs.writeFileSync(reminderPagePath, fullReminderPageContent, 'utf8');
+
+// Update App.tsx routing signature for reminder page
+let appRoutingContent = fs.readFileSync(path.join(srcDir, 'App.tsx'), 'utf8');
+appRoutingContent = appRoutingContent.replace(/<ReminderPage onAddReminder={handleAddReminder} \/>/g, "<ReminderPage />");
+fs.writeFileSync(path.join(srcDir, 'App.tsx'), appRoutingContent, 'utf8');
+
+console.log('UI Patched successfully.');

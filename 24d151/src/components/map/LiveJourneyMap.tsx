@@ -43,7 +43,7 @@ function AutoPanMap({ coords }: { coords: [number, number] }) {
   return null;
 }
 
-export default function LiveJourneyMap({ route, progressPercent, hasDisruption = false }: LiveJourneyMapProps) {
+const LiveJourneyMap = function LiveJourneyMap({ route, progressPercent, hasDisruption = false }: LiveJourneyMapProps) {
   const [currentPos, setCurrentPos] = useState<[number, number]>(PATH_COORDS[0]);
 
   useEffect(() => {
@@ -133,3 +133,5 @@ export default function LiveJourneyMap({ route, progressPercent, hasDisruption =
     </div>
   );
 }
+
+export default React.memo(LiveJourneyMap);

@@ -48,9 +48,11 @@ export interface Reminder {
   to: string;
   departureTime: string;
   mode: TransitMode;
-  status: 'active' | 'fired' | 'dismissed';
+  status: 'active' | 'triggered' | 'dismissed' | 'cancelled';
   minutesBefore: number;
   type: 'smart' | 'fixed';
+  repeat?: string;
+  enabled?: boolean;
 }
 
 export interface HistoryItem {

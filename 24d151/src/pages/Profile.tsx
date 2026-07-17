@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { HistoryItem, Reminder } from '../types';
 import { userService } from '../services/userService';
+import { reminderService } from '../services/reminderService';
+import { Reminder } from '../types';
 import ProfileCard from '../components/profile/ProfileCard';
 import ReminderCard from '../components/profile/ReminderCard';
 import { History, Award, Leaf, Calendar, Loader2, AlarmClock, Clock } from 'lucide-react';
