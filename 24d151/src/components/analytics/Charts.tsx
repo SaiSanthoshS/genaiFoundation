@@ -14,7 +14,7 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { AnalyticsData } from '../types';
+import { AnalyticsData } from '../../types';
 
 interface ChartsProps {
   data: AnalyticsData;

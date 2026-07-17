@@ -1,7 +1,7 @@
 import React from 'react';
-import { Reminder } from '../types';
+import { Reminder } from '../../types';
 import { AlarmClock, Bell, Trash2, CheckCircle, Sparkles, MapPin, Footprints, Train } from 'lucide-react';
-import { getModeIcon } from './RouteCard';
+import { getModeIcon } from '../journey/RouteCard';
 
 interface ReminderCardProps {
   key?: string;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import CopilotPanel from './components/CopilotPanel';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import CopilotPanel from './components/common/CopilotPanel';
 import LandingPage from './pages/LandingPage';
 import JourneyPlanner from './pages/JourneyPlanner';
 import LiveJourney from './pages/LiveJourney';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import MapPanel from '../components/MapPanel';
+import MapPanel from '../components/journey/MapPanel';
 import { RouteOption, TransitMode } from '../types';
-import { getModeIcon, getModeBg } from '../components/RouteCard';
+import { getModeIcon, getModeBg } from '../components/journey/RouteCard';
 import { 
   Radio, 
   MapPin, 

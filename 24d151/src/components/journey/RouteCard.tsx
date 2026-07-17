@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteOption, TransitMode } from '../types';
+import { RouteOption, TransitMode } from '../../types';
 import { 
   Footprints, 
   Bus, 

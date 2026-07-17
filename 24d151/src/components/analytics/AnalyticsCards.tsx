@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnalyticsData } from '../types';
+import { AnalyticsData } from '../../types';
 import { Zap, DollarSign, Leaf, Map, Footprints } from 'lucide-react';
 
 interface AnalyticsCardsProps {

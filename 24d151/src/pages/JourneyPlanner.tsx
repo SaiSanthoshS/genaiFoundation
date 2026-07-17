@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import JourneyForm, { SearchOptions } from '../components/JourneyForm';
-import RouteCard from '../components/RouteCard';
-import DelayAlert from '../components/DelayAlert';
+import JourneyForm, { SearchOptions } from '../components/journey/JourneyForm';
+import RouteCard from '../components/journey/RouteCard';
+import DelayAlert from '../components/journey/DelayAlert';
 import { RouteOption, DelayInfo, Reminder } from '../types';
 import { MOCK_ROUTES, MOCK_DELAYS } from '../data';
 import { Sparkles, Calendar, Plus, Clock, Check, AlarmClock, AlertCircle } from 'lucide-react';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DelayInfo } from '../types';
+import { DelayInfo } from '../../types';
 import { AlertTriangle, Info, ArrowRight, Sparkles, X, ShieldAlert } from 'lucide-react';
 
 interface DelayAlertProps {

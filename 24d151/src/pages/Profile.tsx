@@ -1,10 +1,10 @@
 import React from 'react';
-import ProfileCard from '../components/ProfileCard';
-import ReminderCard from '../components/ReminderCard';
+import ProfileCard from '../components/profile/ProfileCard';
+import ReminderCard from '../components/profile/ReminderCard';
 import { Reminder, HistoryItem } from '../types';
 import { MOCK_HISTORY } from '../data';
 import { AlarmClock, History, Compass, CheckCircle2, Leaf, Clock } from 'lucide-react';
-import { getModeIcon, getModeBg } from '../components/RouteCard';
+import { getModeIcon, getModeBg } from '../components/journey/RouteCard';
 
 interface ProfilePageProps {
   user: {

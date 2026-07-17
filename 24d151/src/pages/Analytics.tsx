@@ -1,6 +1,6 @@
 import React from 'react';
-import AnalyticsCards from '../components/AnalyticsCards';
-import Charts from '../components/Charts';
+import AnalyticsCards from '../components/analytics/AnalyticsCards';
+import Charts from '../components/analytics/Charts';
 import { AnalyticsData } from '../types';
 import { MOCK_ANALYTICS } from '../data';
 import { Sparkles, Trophy, Award, Landmark, Flame } from 'lucide-react';

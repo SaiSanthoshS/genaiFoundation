@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatMessage } from '../types';
-import { INITIAL_CHAT } from '../data';
+import { ChatMessage } from '../../types';
+import { INITIAL_CHAT } from '../../data';
 import { Send, Sparkles, X, Compass, ChevronRight, MessageSquare, AlertCircle } from 'lucide-react';
 
 interface CopilotPanelProps {

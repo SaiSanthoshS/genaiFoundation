@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeftRight, MapPin, Calendar, Clock, Star, Zap, Search } from 'lucide-react';
-import { POPULAR_STATIONS } from '../data';
+import { POPULAR_STATIONS } from '../../data';
 
 interface JourneyFormProps {
   onSearch: (from: string, to: string, options: SearchOptions) => void;

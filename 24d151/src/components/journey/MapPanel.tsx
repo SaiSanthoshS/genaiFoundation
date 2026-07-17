@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RouteOption } from '../types';
+import { RouteOption } from '../../types';
 import { Map, Navigation, Train, Info, Radio, Layers } from 'lucide-react';
 
 interface MapPanelProps {

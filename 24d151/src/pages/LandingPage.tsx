@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Compass, Sparkles, Navigation, ShieldCheck, Leaf, Heart, Radio, Activity } from 'lucide-react';
-import AgentStatus from '../components/AgentStatus';
+import AgentStatus from '../components/common/AgentStatus';
 
 interface LandingPageProps {
   onStartPlanning: (from: string, to: string) => void;
