@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Risk Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>NexusRisk</h2>
+                <span class="badge">Live</span>
+            </div>
+            <nav>
+                <a href="#" class="active" data-view="dashboard">Dashboard</a>
+                <a href="#" data-view="setup">Route Setup</a>
+                <a href="#" data-view="alerts">Alert Config</a>
+                <a href="#" data-view="reports">Weekly Reports</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Global Supply Chain Overview</h1>
+                <div class="status-indicator">
+                    <span class="pulse"></span> Agent Monitoring Active
+                </div>
+            </header>
+
+            <div class="content-area" id="view-dashboard">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+                
+                <div class="risk-table-container">
+                    <h3>Active Routes Risk Analysis</h3>
+                    <table class="risk-table" id="risk-table">
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th>Cargo Type</th>
+                                <th>Weather</th>
+                                <th>Congestion</th>
+                                <th>Geopolitical</th>
+                                <th>Total Risk</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-area hidden" id="view-setup">
+                <div class="card form-card">
+                    <h2>Setup New Route</h2>
+                    <form id="route-form">
+                        <div class="form-group">
+                            <label>Origin</label>
+                            <input type="text" id="origin" placeholder="e.g. Shanghai" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Destination</label>
+                            <input type="text" id="destination" placeholder="e.g. Los Angeles" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo Type</label>
+                            <select id="cargo-type">
+                                <option value="Electronics">Electronics</option>
+                                <option value="Automotive">Automotive</option>
+                                <option value="Perishables">Perishables</option>
+                                <option value="Raw Materials">Raw Materials</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">Monitor Route</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="content-area hidden" id="view-alerts">
+                <div class="card form-card">
+                    <h2>Alert Configuration</h2>
+                    <form id="alert-form">
+                        <div class="form-group">
+                            <label>Risk Threshold (0-100)</label>
+                            <input type="number" id="threshold" value="75" min="0" max="100">
+                            <small>Alerts will be triggered when a route's total risk exceeds this threshold.</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Notification Method</label>
+                            <select id="notif-method">
+                                <option value="email">Email</option>
+                                <option value="sms">SMS</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">Save Configuration</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="content-area hidden" id="view-reports">
+                <div class="card">
+                    <h2>Weekly Risk Report</h2>
+                    <div id="report-content" class="report-content">
+                        <!-- Generated report content -->
+                        <p class="text-muted">Agent is gathering data...</p>
+                    </div>
+                    <button id="generate-report" class="btn-secondary">Generate Latest Report</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="app.js"></script>
+</body>
+</html>
