@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Symptom Navigator — Symptom Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot"></span> Step 1 of 4 — Symptom Chat</div>
+    <h1>Tell the agent how you're feeling</h1>
+    <p class="sub">Chat naturally, tap the body map, or use quick-select tags. The agent will build your symptom list and cross-check any medications before ranking possible conditions.</p>
+  </div>
+
+  <div class="split">
+    <div class="card chat-panel reveal">
+      <div class="chat-head">
+        <div class="chat-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2 12H6L8.5 5L13 19L15.5 12H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="chat-title">Navigator Agent</div>
+          <div class="chat-status"><span class="dot"></span> Online — ready to listen</div>
+        </div>
+      </div>
+      <div class="chat-body" id="chat-body">
+        <div class="msg msg-agent">Hi, I'm your Symptom Navigator agent. <b>What's going on today?</b> You can describe it in your own words, e.g. "I have a sore throat and a fever since yesterday."</div>
+      </div>
+      <div style="padding: 0 22px;">
+        <div class="chip-row" id="symptom-chips"></div>
+      </div>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Describe your symptoms…" autocomplete="off">
+        <button class="send-btn" id="send-btn" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card map-panel reveal" style="animation-delay:0.08s">
+      <h3>Body map</h3>
+      <p class="hint">Tap a region to flag a symptom there</p>
+      <div id="body-map-mount"></div>
+      <div class="region-legend" id="region-legend"></div>
+
+      <div class="quickset">
+        <h4>Quick-add common symptoms</h4>
+        <div class="quick-chip-grid" id="quick-chip-grid"></div>
+      </div>
+
+      <div class="med-box">
+        <h4>Current medications (optional)</h4>
+        <div class="chip-row" id="med-chips" style="margin-bottom:8px;"></div>
+        <div class="med-input-row">
+          <input id="med-input" type="text" placeholder="e.g. ibuprofen">
+          <button id="med-add-btn" type="button">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyze-bar">
+    <button class="btn btn-primary" id="analyze-btn" disabled>
+      Analyze Symptoms
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<div class="think-overlay" id="think-overlay"></div>
+
+<script src="js/data.js"></script>
+<script src="js/agent.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderHeader(0);
+  renderFooter();
+  renderThinkOverlay();
+  initChatPage();
+</script>
+</body>
+</html>
