@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MapPanel from '../components/journey/MapPanel';
+import LiveJourneyMap from '../components/map/LiveJourneyMap';
 import { RouteOption, TransitMode } from '../types';
 import { getModeIcon, getModeBg } from '../components/journey/RouteCard';
 import { 
@@ -24,6 +24,7 @@ export default function LiveJourney({ selectedRoute, onSelectStation }: LiveJour
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
   const [stopCounter, setStopCounter] = useState(1);
   const [etaMinutes, setEtaMinutes] = useState(selectedRoute ? selectedRoute.totalDuration : 15);
+  const [progressPercent, setProgressPercent] = useState(0);
 
   // Simulate updating active stop counts
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function LiveJourney({ selectedRoute, onSelectStation }: LiveJour
     setCurrentSegmentIndex(0);
     setStopCounter(1);
     setEtaMinutes(selectedRoute.totalDuration);
+    setProgressPercent(0);
 
     const interval = setInterval(() => {
       setEtaMinutes((prev) => (prev <= 1 ? selectedRoute.totalDuration : prev - 1));
@@ -40,19 +42,30 @@ export default function LiveJourney({ selectedRoute, onSelectStation }: LiveJour
       // periodically advance stops
       setStopCounter((prev) => {
         const activeSegment = selectedRoute.segments[currentSegmentIndex];
-        if (activeSegment && prev >= activeSegment.stops) {
+        let newStopCounter = prev + 1;
+        
+        if (activeSegment && prev >= (activeSegment.stops || 1)) {
           // move to next segment
           setCurrentSegmentIndex((seg) => (seg + 1 >= selectedRoute.segments.length ? 0 : seg + 1));
-          return 1;
+          newStopCounter = 1;
         }
-        return prev + 1;
+
+        // Calculate progress percentage
+        const totalStops = selectedRoute.segments.reduce((acc, seg) => acc + (seg.stops || 1), 0);
+        const completedStops = selectedRoute.segments.slice(0, currentSegmentIndex).reduce((acc, seg) => acc + (seg.stops || 1), 0);
+        setProgressPercent(Math.min(100, ((completedStops + newStopCounter) / totalStops) * 100));
+
+        return newStopCounter;
       });
-    }, 15000); // simulation interval
+    }, 4000); // simulation interval - sped up for testing
 
     return () => clearInterval(interval);
-  }, [selectedRoute]);
+  }, [selectedRoute, currentSegmentIndex]);
 
   const activeSegment = selectedRoute?.segments[currentSegmentIndex];
+  
+  // Hardcoded for demo: show disruption on "route-2" 
+  const hasDisruption = selectedRoute?.id === 'route-2';
 
   return (
     <div className="space-y-8 pb-16 animate-in fade-in duration-300">
@@ -70,12 +83,11 @@ export default function LiveJourney({ selectedRoute, onSelectStation }: LiveJour
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Interactive Vector Map Panel */}
-        <div className="lg:col-span-8 h-[480px] lg:h-[550px]">
-          <MapPanel 
-            selectedRoute={selectedRoute} 
-            origin={selectedRoute?.segments[0]?.name}
-            destination={selectedRoute?.segments[selectedRoute.segments.length - 1]?.name}
-            onSelectStation={onSelectStation}
+        <div className="lg:col-span-8 h-[480px] lg:h-[550px] relative z-0">
+          <LiveJourneyMap 
+            route={selectedRoute || null}
+            progressPercent={progressPercent}
+            hasDisruption={hasDisruption}
           />
         </div>
 
