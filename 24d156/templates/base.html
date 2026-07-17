@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cybersecurity CVE Alert System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #07111f;
+        color: #f3f7fb;
+      }
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .panel {
+        background: #10233d;
+        border: 1px solid #23415f;
+        border-radius: 14px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .pill {
+        display: inline-block;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.84rem;
+        margin-right: 0.5rem;
+        background: #1c4c7d;
+      }
+      .alert-card {
+        border-left: 6px solid #3da6ff;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #0e1d30;
+        border-radius: 10px;
+      }
+      .critical { border-left-color: #ff4d4d; }
+      .high { border-left-color: #ff8c42; }
+      .medium { border-left-color: #f2c94c; }
+      .low { border-left-color: #4ade80; }
+      textarea, select, input[type="text"] {
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 8px;
+        border: 1px solid #3f5870;
+        background: #0b1526;
+        color: #fff;
+        margin-top: 0.3rem;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 0.7rem 1rem;
+        border: none;
+        border-radius: 8px;
+        background: #3da6ff;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      a { color: #8bd2ff; }
+      .grid { display: grid; gap: 1rem; }
+      .grid-two { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
