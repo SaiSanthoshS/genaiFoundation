@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowLeftRight, MapPin, Calendar, Clock, Star, Zap, Search } from 'lucide-react';
+import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
+
+const LIBRARIES: any = ['places'];
 
 const POPULAR_STATIONS = [
   'Grand Central Terminal',
