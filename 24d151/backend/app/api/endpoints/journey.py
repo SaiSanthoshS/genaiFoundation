@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any
-from app.schemas.journey import RouteOption, DelayInfo, PlanRequest, ReminderRequest, Reminder, DelayRequest
+from app.schemas.journey import RouteOption, DelayInfo, PlanRequest, ReminderRequest, Reminder, DelayRequest, ReminderUpdateRequest
 from app.services.journey_service import JourneyService
 
 router = APIRouter()
@@ -32,6 +32,24 @@ def reroute(req: DelayRequest):
 @router.post("/reminder", response_model=Reminder)
 def create_reminder(req: ReminderRequest):
     return JourneyService.create_reminder(req)
+
+@router.get("/reminders", response_model=List[Reminder])
+def get_reminders():
+    return JourneyService.get_all_reminders()
+
+@router.put("/reminder/{reminder_id}", response_model=Reminder)
+def update_reminder(reminder_id: str, req: ReminderUpdateRequest):
+    rem = JourneyService.update_reminder(reminder_id, req.dict(exclude_unset=True))
+    if not rem:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    return rem
+
+@router.delete("/reminder/{reminder_id}")
+def delete_reminder(reminder_id: str):
+    success = JourneyService.delete_reminder(reminder_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    return {"status": "success"}
 
 # Added to easily fetch delays mirroring frontend mock delayService
 @router.get("/delays", response_model=List[DelayInfo])

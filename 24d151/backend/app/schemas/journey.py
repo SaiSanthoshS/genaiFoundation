@@ -49,6 +49,8 @@ class Reminder(BaseModel):
     status: str
     minutesBefore: int
     type: str
+    repeat: Optional[str] = "once"
+    enabled: Optional[bool] = True
 
 class PlanRequest(BaseModel):
     origin: str
@@ -66,6 +68,12 @@ class ReminderRequest(BaseModel):
     mode: str
     minutesBefore: int
     type: str
+    repeat: Optional[str] = "once"
+    enabled: Optional[bool] = True
+
+class ReminderUpdateRequest(BaseModel):
+    status: Optional[str] = None
+    enabled: Optional[bool] = None
 
 class DelayRequest(BaseModel):
     route_id: str
