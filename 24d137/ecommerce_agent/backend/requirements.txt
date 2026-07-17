@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlalchemy
+google-search-results
+google-genai
+apscheduler
+python-multipart
+pydantic
