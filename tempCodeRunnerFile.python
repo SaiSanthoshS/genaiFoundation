@@ -1,0 +1,5 @@
+import wikipediaapi
+wiki_wiki = wikipediaapi.Wikipedia(user_agent='testing (24d102@psgitech.ac.in)', language='en')
+
+page_py = wiki_wiki.page('Black hole')
+print(page_py.text)
