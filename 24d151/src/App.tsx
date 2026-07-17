@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import CopilotPanel from './components/common/CopilotPanel';
-import LandingPage from './pages/LandingPage';
-import JourneyPlanner from './pages/JourneyPlanner';
-import LiveJourney from './pages/LiveJourney';
-import Analytics from './pages/Analytics';
-import Profile from './pages/Profile';
+import React, { useState, Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
 import { RouteOption, Reminder } from './types';
 import { MOCK_REMINDERS } from './data';
-import { Sparkles } from 'lucide-react';
+
+// Lazy loading pages
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const JourneyPlanner = lazy(() => import('./pages/JourneyPlanner'));
+const LiveJourney = lazy(() => import('./pages/LiveJourney'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Profile = lazy(() => import('./pages/Profile'));
+const RouteRecommendationsPage = lazy(() => import('./pages/RouteRecommendationsPage'));
+const DelayAlertPage = lazy(() => import('./pages/DelayAlertPage'));
+const AICopilotPage = lazy(() => import('./pages/AICopilotPage'));
+const ReminderPage = lazy(() => import('./pages/ReminderPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const INITIAL_USER = {
   name: 'Srinisha Thangavel',
@@ -23,7 +28,6 @@ const INITIAL_USER = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>('landing');
   const [selectedRoute, setSelectedRoute] = useState<RouteOption | undefined>(undefined);
   const [reminders, setReminders] = useState<Reminder[]>(MOCK_REMINDERS);
   const [user, setUser] = useState(INITIAL_USER);
@@ -37,13 +41,11 @@ export default function App() {
   const handleStartPlanning = (fromStation: string, toStation: string) => {
     setPlannerFrom(fromStation);
     setPlannerTo(toStation);
-    setActiveTab('planner');
   };
 
   const handleSelectSuggestedRoute = (fromStation: string, toStation: string) => {
     setPlannerFrom(fromStation);
     setPlannerTo(toStation);
-    setActiveTab('planner');
   };
 
   const handleAddReminder = (newRem: Omit<Reminder, 'id' | 'status'>) => {
@@ -80,80 +82,119 @@ export default function App() {
   };
 
   const handleSelectStationOnMap = (stationName: string) => {
-    // If user clicks a station on the interactive map, populate origin/destination
     if (!plannerFrom) {
       setPlannerFrom(stationName);
-      setActiveTab('planner');
     } else if (!plannerTo && plannerFrom !== stationName) {
       setPlannerTo(stationName);
-      setActiveTab('planner');
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background text-on-background font-sans flex flex-col justify-between selection:bg-primary selection:text-white">
-      
-      {/* Top Navigation Bar */}
-      <Navbar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        onOpenCopilot={() => setCopilotOpen(true)}
-        alertCount={alertCount}
-      />
-
-      {/* Main Container Stage */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-12 pt-24 pb-8">
-        {activeTab === 'landing' && (
-          <LandingPage 
-            onStartPlanning={handleStartPlanning} 
-            activeDisruptions={alertCount}
-          />
-        )}
-
-        {activeTab === 'planner' && (
-          <JourneyPlanner
-            initialFrom={plannerFrom}
-            initialTo={plannerTo}
-            selectedRoute={selectedRoute}
-            onSelectRoute={(route) => {
-              setSelectedRoute(route);
-              // After selecting a route, nudge user that they can track it live
-            }}
-            onAddReminder={handleAddReminder}
-          />
-        )}
-
-        {activeTab === 'live' && (
-          <LiveJourney 
-            selectedRoute={selectedRoute}
-            onSelectStation={handleSelectStationOnMap}
-          />
-        )}
-
-        {activeTab === 'analytics' && (
-          <Analytics />
-        )}
-
-        {activeTab === 'profile' && (
-          <Profile
-            user={user}
-            reminders={reminders}
-            onToggleReminder={handleToggleReminder}
-            onDeleteReminder={handleDeleteReminder}
-            onUpdatePreferences={handleUpdatePreferences}
-          />
-        )}
-      </main>
-
-      {/* Floating AI Assistant Copilot Drawer overlay */}
-      <CopilotPanel
-        isOpen={copilotOpen}
-        onClose={() => setCopilotOpen(false)}
-        onSelectSuggestedRoute={handleSelectSuggestedRoute}
-      />
-
-      {/* Footer component */}
-      <Footer />
+  // Reusable loading spinner for suspense fallback
+  const FallbackLoader = () => (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
     </div>
+  );
+
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-background text-on-background font-sans flex flex-col justify-between selection:bg-primary selection:text-white">
+        <Routes>
+          <Route 
+            element={
+              <MainLayout 
+                alertCount={alertCount}
+                copilotOpen={copilotOpen}
+                onOpenCopilot={() => setCopilotOpen(true)}
+                onCloseCopilot={() => setCopilotOpen(false)}
+                onSelectSuggestedRoute={handleSelectSuggestedRoute}
+              />
+            }
+          >
+            <Route path="/" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <LandingPage 
+                  onStartPlanning={handleStartPlanning} 
+                  activeDisruptions={alertCount}
+                />
+              </Suspense>
+            } />
+            
+            <Route path="/journey-planner" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <JourneyPlanner
+                  initialFrom={plannerFrom}
+                  initialTo={plannerTo}
+                  selectedRoute={selectedRoute}
+                  onSelectRoute={(route) => setSelectedRoute(route)}
+                  onAddReminder={handleAddReminder}
+                />
+              </Suspense>
+            } />
+
+            <Route path="/route-recommendations" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <RouteRecommendationsPage 
+                  selectedRoute={selectedRoute}
+                  onSelectRoute={(route) => setSelectedRoute(route)}
+                  onSetReminder={(route) => console.log('Setting reminder from standalone page for', route.name)}
+                />
+              </Suspense>
+            } />
+
+            <Route path="/live-journey" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <LiveJourney 
+                  selectedRoute={selectedRoute}
+                  onSelectStation={handleSelectStationOnMap}
+                />
+              </Suspense>
+            } />
+
+            <Route path="/delay-alert" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <DelayAlertPage />
+              </Suspense>
+            } />
+
+            <Route path="/ai-copilot" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <AICopilotPage />
+              </Suspense>
+            } />
+
+            <Route path="/reminder" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <ReminderPage onAddReminder={handleAddReminder} />
+              </Suspense>
+            } />
+
+            <Route path="/analytics" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <Analytics />
+              </Suspense>
+            } />
+
+            <Route path="/profile" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <Profile
+                  user={user}
+                  reminders={reminders}
+                  onToggleReminder={handleToggleReminder}
+                  onDeleteReminder={handleDeleteReminder}
+                  onUpdatePreferences={handleUpdatePreferences}
+                />
+              </Suspense>
+            } />
+
+            <Route path="*" element={
+              <Suspense fallback={<FallbackLoader />}>
+                <NotFoundPage />
+              </Suspense>
+            } />
+          </Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
