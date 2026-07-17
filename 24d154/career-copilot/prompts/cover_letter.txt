@@ -1,0 +1,24 @@
+Write a compelling, personalized cover letter for the following candidate and job.
+
+Candidate:
+- Name: {{CANDIDATE_NAME}}
+- Key Skills: {{CANDIDATE_SKILLS}}
+- Relevant Experience: {{CANDIDATE_EXPERIENCE}}
+- Notable Projects: {{CANDIDATE_PROJECTS}}
+
+Target Job:
+- Title: {{JOB_TITLE}}
+- Company: {{COMPANY_NAME}}
+- Description: {{JOB_DESCRIPTION}}
+- Requirements: {{JOB_REQUIREMENTS}}
+
+Rules:
+1. Keep it under 400 words
+2. Open with a strong hook — NOT "I am writing to apply for..."
+3. Connect the candidate's specific experience to job requirements
+4. Mention 2-3 concrete achievements with metrics if available
+5. Show enthusiasm for the company specifically
+6. End with a confident call to action
+7. Use a professional but warm tone
+8. Do NOT fabricate experience — only reference what's provided
+9. Format as a proper business letter (with paragraphs, not bullets)
