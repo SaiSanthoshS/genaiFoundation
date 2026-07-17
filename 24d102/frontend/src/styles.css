@@ -1,0 +1,258 @@
+:root {
+  --bg: #f5f2eb;
+  --ink: #1f1f1f;
+  --ink-soft: #474747;
+  --card: #fffcf6;
+  --accent-a: #0f4c5c;
+  --accent-b: #d1495b;
+  --accent-c: #edae49;
+  --line: #1f1f1f;
+  --shadow: 0 12px 28px rgba(17, 17, 17, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Space Grotesk", sans-serif;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(237, 174, 73, 0.32), transparent 28%),
+    radial-gradient(circle at 80% 22%, rgba(15, 76, 92, 0.22), transparent 24%),
+    radial-gradient(circle at 70% 82%, rgba(209, 73, 91, 0.18), transparent 26%),
+    var(--bg);
+}
+
+.app-shell {
+  width: min(1120px, 94vw);
+  margin: 24px auto 36px;
+  display: grid;
+  gap: 18px;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #0f4c5c 0%, #0b2f38 100%);
+  color: #f5f2eb;
+  border: 2px solid #0b2f38;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  animation: liftIn 500ms ease-out;
+}
+
+.kicker {
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+h1,
+h2 {
+  font-family: "DM Serif Display", serif;
+  margin: 0 0 10px;
+}
+
+.hero-card h1 {
+  font-size: clamp(1.8rem, 4vw, 2.9rem);
+  line-height: 1.05;
+  margin-top: 8px;
+}
+
+.hero-card p {
+  margin: 8px 0 0;
+  max-width: 70ch;
+}
+
+.page-tabs {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-tabs button {
+  background: #f5f2eb;
+  box-shadow: none;
+}
+
+.page-tabs .tab-active {
+  background: var(--accent-c);
+}
+
+.panel {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  animation: fadeSlide 450ms ease both;
+}
+
+.subtext {
+  margin-top: -2px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.selector-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #2a2a2a;
+  border-radius: 10px;
+  background: #fff;
+}
+
+button {
+  align-self: end;
+  background: var(--accent-c);
+  color: #161616;
+  border: 2px solid #161616;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #161616;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.chart-wrap {
+  margin-top: 8px;
+}
+
+.hover-note {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed #2a2a2a;
+  border-radius: 10px;
+  background: #fffaf1;
+}
+
+.hover-note p {
+  margin: 0;
+}
+
+.results-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.event-list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.event-list li {
+  border: 1.5px dashed #2b2b2b;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fffaf1;
+}
+
+.event-head {
+  margin: 0 0 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.event-head em {
+  color: #5d5d5d;
+}
+
+.error-banner,
+.error-inline {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #7a1120;
+  background: #ffe8e8;
+  color: #7a1120;
+  font-weight: 600;
+}
+
+.empty-note {
+  margin: 8px 0 0;
+  color: #4d4d4d;
+}
+
+.placeholder-panel {
+  border-style: dashed;
+}
+
+@keyframes liftIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    width: min(96vw, 1120px);
+    margin-top: 16px;
+  }
+
+  .panel {
+    border-radius: 14px;
+    padding: 14px;
+  }
+
+  .hero-card {
+    border-radius: 16px;
+  }
+}
