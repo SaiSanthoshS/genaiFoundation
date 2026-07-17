@@ -1,0 +1,3 @@
+Healthcare Symptom Navigator
+Agent: When user submits symptoms through a chat interface, the agent queries a medical symptom database, ranks possible conditions by likelihood, checks for drug interactions with any medications the user listed, finds nearby clinics, and generates a printable symptom report.
+Frontend: Symptom Chat Interface — conversational input with a body-map selector; submitting triggers the agent | Condition Results Page — agent-ranked conditions with severity badges and plain-language explanations | Clinic Map — agent-located clinics nearby with ratings and distance; user clicks to get directions | Report Download Page — agent-compiled PDF with symptoms, conditions, and suggested next steps

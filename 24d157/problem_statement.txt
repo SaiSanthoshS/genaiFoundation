@@ -1,0 +1,3 @@
+GitHub Trend Analyser & Weekly Digest
+Agent: When user subscribes to a set of programming topics, the agent fetches trending repositories daily, tracks which topics are rising week-over-week, analyses the backgrounds of top contributors, and composes a personalised weekly digest email.
+Frontend: Topic Subscription Page — tag-style topic selector; "Subscribe" activates the agent | Trending Today Page — agent-fetched repo cards with stars gained, language, and description | Topic Trend Chart — agent-tracked line chart showing each topic's momentum over 8 weeks | Contributor Spotlight Page — agent-profiled top contributors per topic | Digest Preview — agent-composed email; user can edit and schedule delivery

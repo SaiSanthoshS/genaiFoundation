@@ -1,0 +1,3 @@
+Smart Medication Reminder & Tracker
+Agent: When user inputs their prescriptions, the agent fetches drug information, checks for interactions across all listed medications, sets daily reminders, tracks whether each dose was taken, estimates when stock will run out, and alerts the user to refill in advance.
+Frontend: Medication Input Form — drug name, dosage, and frequency; "Set Up Tracker" triggers the agent | Interaction Warning Page — agent-detected conflicts shown as a matrix with severity explanations | Daily Reminder Dashboard — today's doses listed by the agent; user taps each pill to mark as taken | Adherence Heatmap Calendar — agent-tracked history of taken/missed doses | Refill Alert Panel — agent-calculated days of stock remaining with a nearby pharmacy map

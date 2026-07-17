@@ -1,0 +1,3 @@
+Legal Document Analyser
+Agent: When user uploads a contract or enters a case number, the agent fetches the document, extracts individual clauses, scores each one for legal risk, retrieves relevant legal precedents, and produces a plain-English explanation of every flagged clause.
+Frontend: Document Upload / Case Number Input — submission triggers the agent | Annotated Document Viewer — original text with agent-highlighted risk clauses in red/amber/green | Clause Risk Table — each clause listed with agent-assigned risk score and plain-English explanation | Precedents Sidebar — related cases fetched by the agent, linked to the relevant clause

@@ -1,0 +1,3 @@
+Job Application Assistant
+Agent: When user uploads their resume, the agent parses it to extract skills and experience, searches multiple job boards for matching openings, scores each listing for fit, fetches company culture ratings, and drafts a personalised cover letter for the top match.
+Frontend: Resume Upload Page — drag-and-drop PDF triggers the agent pipeline | Job Matches Dashboard — displays agent-ranked listings with fit scores, company ratings, and salary ranges | Cover Letter Editor — shows the agent-drafted letter with an editable text area; user clicks "Apply" to send | Application Tracker Kanban — columns for Applied / Interview / Offer, cards auto-added by the agent after each application

@@ -1,0 +1,3 @@
+Cybersecurity CVE Alert System
+Agent: When user inputs their technology stack, the agent polls the national vulnerability database daily, matches new CVEs to the installed software versions, scores severity, checks whether those systems are exposed to the internet, and sends a ranked alert list with patch priority.
+Frontend: Tech Stack Input Page — software names and versions; "Start Monitoring" activates the agent | CVE Dashboard — agent-fetched vulnerabilities shown as a severity heatmap by software | CVE Detail Page — agent-retrieved description, affected versions, and patch link | Alert Settings — user sets severity threshold; agent sends Slack or email digest when new CVEs match

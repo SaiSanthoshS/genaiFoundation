@@ -1,0 +1,3 @@
+Remote Job Board Aggregator
+Agent: When user uploads their resume or enters their skills, the agent queries multiple remote job platforms simultaneously, deduplicates listings, scores skill match for each posting, estimates market salary range, and ranks results by fit.
+Frontend: Resume/Skills Input Page — upload or skill tags; "Find Jobs" fires the agent | Aggregated Job Board — agent-ranked listings with match score, salary estimate, and source badge | Job Detail Page — agent-computed skill gap breakdown and suggested learning resources | Application Tracker — status pipeline updated by the user; agent flags new matching roles automatically

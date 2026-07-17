@@ -1,0 +1,3 @@
+Flight Price Prediction & Alert Agent
+Agent: When user submits a route and travel window, the agent fetches historical price data, runs a regression to identify the cheapest booking window, monitors prices daily, and sends an alert the moment the price drops below the predicted minimum.
+Frontend: Flight Search Form — origin, destination, and flexible date range; "Set Price Alert" triggers the agent | Price Calendar — heatmap of agent-fetched prices per date combination | Prediction Chart — agent-generated forecast line overlaid on actual prices, updated daily | Alert Manager — active alerts listed with current vs predicted price; user adjusts threshold

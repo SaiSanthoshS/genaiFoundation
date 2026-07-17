@@ -1,0 +1,3 @@
+Real Estate Investment Advisor
+Agent: When user submits city, budget, and property type, the agent fetches current listings, calculates the monthly mortgage payment for each, pulls neighbourhood crime statistics, retrieves nearby school ratings, scores each property holistically, and ranks the top five.
+Frontend: Search Form — city, budget slider, property type; "Find Properties" fires the agent | Listings Map — agent-scored property markers colour-coded from green (best) to red | Property Detail Page — agent-computed EMI, crime index, and school score laid out side by side | Compare Page — user picks up to three properties; agent produces a side-by-side scorecard

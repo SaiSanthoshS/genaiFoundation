@@ -1,0 +1,3 @@
+Public API Directory & Recommender
+Agent: When user describes a use case in plain text, the agent searches a curated index of public APIs, semantically matches the description to each API's purpose, ranks the best matches, fetches the quick-start documentation, and generates a ready-to-run code snippet for the top result.
+Frontend: Use Case Search Bar — free-text input; submitting triggers the agent | API Cards Grid — agent-ranked results with name, category, auth type, and relevance score | API Detail Page — agent-fetched quick-start docs with a generated code snippet the user can copy | Bookmarks Page — user saves preferred APIs; the agent adds usage notes from the documentation

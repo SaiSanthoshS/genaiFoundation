@@ -1,0 +1,3 @@
+Supply Chain Risk Monitor
+Agent: When user inputs supplier locations and shipping routes, the agent monitors port congestion reports, checks weather on sea routes, scans news for geopolitical disruptions, scores risk per route, and sends an alert when any route crosses a danger threshold.
+Frontend: Supplier & Route Setup Form — origin, destination, and cargo type; "Monitor Routes" activates the agent | World Map — agent-coloured shipping routes from green (safe) to red (high risk) | Risk Score Table — agent-assigned scores per route with the contributing factors listed | Alert Config — user sets risk threshold; agent sends email/SMS when exceeded | Weekly Risk Report — agent-generated summary of route changes over the past 7 days

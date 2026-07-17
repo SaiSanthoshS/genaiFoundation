@@ -1,0 +1,3 @@
+Restaurant Health Score Checker
+Agent: When user searches a neighbourhood, the agent fetches health inspection records from city open data, enriches each restaurant with ratings and review data, scores sentiment of recent reviews, analyses score trends over time, and ranks the safest options nearby.
+Frontend: Location Search Page — address input and radius slider; "Check Restaurants" triggers the agent | Restaurant Map — markers colour-coded by agent-computed health score | Restaurant Detail Page — agent-assembled inspection history timeline, violation list, and review sentiment gauge | Leaderboard Table — agent-ranked top safest restaurants in the area | Score Trend Chart — agent-tracked health score over past three inspections per restaurant

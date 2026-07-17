@@ -1,0 +1,3 @@
+Smart Coupon & Deal Finder
+Agent: When user adds items to their shopping cart, the agent searches coupon aggregators for each product, evaluates cashback rates across platforms, calculates the optimal coupon combination to maximise savings, and alerts the user when any saved coupon is about to expire.
+Frontend: Shopping Cart Input Page — item names and target stores; "Find Deals" fires the agent | Deal Results Table — agent-fetched coupon codes ranked by savings, with expiry dates | Savings Summary Card — agent-calculated before/after total with breakdown per item | My Coupons Wallet — agent-tracked active coupons with expiry countdown badges | Price History Chart — agent-fetched price over 90 days per item to validate whether the deal is genuine

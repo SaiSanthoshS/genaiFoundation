@@ -1,0 +1,3 @@
+Plant Disease Detector & Advisor
+Agent: When user uploads a leaf photo, the agent classifies the plant species and detects any visible disease, fetches detailed disease information, checks current weather conditions to assess spread risk, recommends treatment options, and locates the nearest agricultural supply shop.
+Frontend: Photo Upload Page — camera or gallery pick; submitting triggers the agent | Disease Result Card — agent-identified species and disease with confidence percentage | Treatment Guide — agent-fetched step-by-step chemical and organic treatment options | Spread Risk Indicator — agent-assessed risk based on local humidity and temperature | Shop Locator Map — nearest agro-input shops surfaced by the agent
