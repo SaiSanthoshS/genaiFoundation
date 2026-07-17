@@ -1,0 +1,6 @@
+import { DelayInfo } from '../../types';
+export const MOCK_DELAYS: DelayInfo[] = [
+  { id: 'delay-1', line: 'Nexus Subway Line 4', route: 'Grand Central to Wall Street Plaza', status: 'minor', delayMinutes: 3, reason: 'Signal maintenance at Union Square', alternativeRouteId: 'route-2', aiAnalysis: 'The 3-minute delay is stabilizing. Headway is returning to nominal levels.', active: true },
+  { id: 'delay-2', line: 'Metro Bus 104', route: 'Central Park West to Times Square', status: 'major', delayMinutes: 14, reason: 'Street construction on Broadway', alternativeRouteId: 'route-1', aiAnalysis: 'Severe congestion surrounding 48th St. Commuter bus transit speed is down to 4 km/h.', active: true },
+  { id: 'delay-3', line: 'Rapid Rail Commuter Line M1', route: 'Hoboken to Penn Station', status: 'critical', delayMinutes: 28, reason: 'Switch malfunction near Tunnel East', alternativeRouteId: 'route-3', aiAnalysis: 'Relay issues have bottlenecked all inbound transit on this corridor.', active: true }
+];

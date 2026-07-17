@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import RouteCard from '../components/journey/RouteCard';
 import { RouteOption } from '../types';
-import { MOCK_ROUTES } from '../data';
-import { Sparkles } from 'lucide-react';
+import { journeyService } from '../services/journeyService';
+import { Sparkles, Loader2 } from 'lucide-react';
 
 interface RouteRecommendationsPageProps {
   selectedRoute?: RouteOption;
@@ -15,7 +15,25 @@ export default function RouteRecommendationsPage({
   onSelectRoute,
   onSetReminder
 }: RouteRecommendationsPageProps) {
-  const routes = MOCK_ROUTES.default;
+  const [routes, setRoutes] = useState<RouteOption[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // We just search for default routes for this standalone page
+    journeyService.searchRoutes('Auto', 'Auto')
+      .then(setRoutes)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant">
+        <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
+        <p>Analyzing transit data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 animate-in fade-in duration-300">
@@ -41,3 +59,4 @@ export default function RouteRecommendationsPage({
     </div>
   );
 }
+

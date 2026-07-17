@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DelayAlert from '../components/journey/DelayAlert';
 import { DelayInfo } from '../types';
-import { MOCK_DELAYS } from '../data';
-import { AlertCircle } from 'lucide-react';
+import { delayService } from '../services/delayService';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 export default function DelayAlertPage() {
-  const [delays, setDelays] = useState<DelayInfo[]>(MOCK_DELAYS);
+  const [delays, setDelays] = useState<DelayInfo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    delayService.getLiveDelays()
+      .then(setDelays)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleDismissDelay = (id: string) => {
     setDelays((prev) => prev.filter(d => d.id !== id));
@@ -14,6 +22,15 @@ export default function DelayAlertPage() {
   const handleResolveRoute = (altRouteId: string) => {
     console.log(`Resolved alternate route ${altRouteId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant">
+        <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
+        <p>Checking live network status...</p>
+      </div>
+    );
+  }
 
   if (delays.length === 0) {
     return (
@@ -42,3 +59,4 @@ export default function DelayAlertPage() {
     </div>
   );
 }
+

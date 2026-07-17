@@ -1,35 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { HistoryItem, Reminder } from '../types';
+import { userService } from '../services/userService';
 import ProfileCard from '../components/profile/ProfileCard';
 import ReminderCard from '../components/profile/ReminderCard';
-import { Reminder, HistoryItem } from '../types';
-import { MOCK_HISTORY } from '../data';
-import { AlarmClock, History, Compass, CheckCircle2, Leaf, Clock } from 'lucide-react';
-import { getModeIcon, getModeBg } from '../components/journey/RouteCard';
+import { History, Award, Leaf, Calendar, Loader2, AlarmClock, Clock } from 'lucide-react';
 
-interface ProfilePageProps {
-  user: {
-    name: string;
-    email: string;
-    tier: string;
-    avatarUrl: string;
-    savedHome: string;
-    savedWork: string;
-    carbonSaved: number;
-    points: number;
-  };
+interface ProfileProps {
+  user: any;
   reminders: Reminder[];
   onToggleReminder: (id: string) => void;
   onDeleteReminder: (id: string) => void;
   onUpdatePreferences: (prefs: any) => void;
 }
 
-export default function Profile({ 
-  user, 
-  reminders, 
-  onToggleReminder, 
-  onDeleteReminder, 
-  onUpdatePreferences 
-}: ProfilePageProps) {
+export default function Profile({ user, reminders, onToggleReminder, onDeleteReminder, onUpdatePreferences }: ProfileProps) {
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    userService.getHistory()
+      .then(setHistory)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="space-y-8 pb-16 animate-in fade-in duration-300">
       
@@ -43,7 +37,7 @@ export default function Profile({
       {/* Profile Setup / Bio Card */}
       <ProfileCard 
         user={user} 
-        onSavePreferences={onUpdatePreferences} 
+        onUpdatePreferences={onUpdatePreferences} 
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -62,8 +56,8 @@ export default function Profile({
               <ReminderCard
                 key={rem.id}
                 reminder={rem}
-                onToggleStatus={onToggleReminder}
-                onDelete={onDeleteReminder}
+                onToggle={() => onToggleReminder(rem.id)}
+                onDelete={() => onDeleteReminder(rem.id)}
               />
             ))}
             
@@ -76,59 +70,65 @@ export default function Profile({
           </div>
         </div>
 
-        {/* Right: Historic Journey Logs */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider flex items-center gap-1.5">
-              <History className="w-4 h-4 text-primary" />
-              Recent Commute Journey Logs
+        {/* Right: History Logging */}
+        <div className="lg:col-span-7">
+          <div className="glass-card p-6 border border-slate-200 shadow-sm sticky top-24">
+            <h3 className="text-base font-bold text-on-surface flex items-center gap-2 mb-6">
+              <History className="w-5 h-5 text-primary" />
+              Recent Journey Log
             </h3>
-            <span className="text-xs text-outline font-semibold">Last 30 days</span>
-          </div>
+            
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant">
+                <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
+                <p>Loading journey history...</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {history.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between p-4 rounded-2xl bg-surface hover:bg-surface-container-low transition-colors border border-outline-variant/30 group">
+                    
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Calendar className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="text-xs text-on-surface-variant font-medium mb-0.5">{item.date}</div>
+                        <div className="font-bold text-on-surface text-sm">
+                          {item.from} <span className="text-outline">→</span> {item.to}
+                        </div>
+                        <div className="text-[10px] text-primary font-bold uppercase tracking-wider mt-1.5 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span>
+                          {item.mode} transit
+                        </div>
+                      </div>
+                    </div>
 
-          <div className="glass-card border border-slate-200 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-semibold border-collapse">
-                <thead>
-                  <tr className="bg-surface-low text-outline uppercase tracking-wider border-b border-outline-variant/30 text-[9px] font-bold">
-                    <th className="p-3.5 pl-5">Date</th>
-                    <th className="p-3.5">Commute Sector</th>
-                    <th className="p-3.5">Transit</th>
-                    <th className="p-3.5 text-right pr-5">Fare / CO₂ Offset</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-outline-variant/20">
-                  {MOCK_HISTORY.map((item) => (
-                    <tr key={item.id} className="hover:bg-surface-low/40 transition-colors">
-                      <td className="p-3.5 pl-5 font-bold text-on-surface-variant whitespace-nowrap">{item.date}</td>
-                      <td className="p-3.5">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-on-surface font-bold truncate max-w-[160px] md:max-w-xs">{item.from}</span>
-                          <span className="text-[10px] text-outline truncate max-w-[160px] md:max-w-xs">→ {item.to}</span>
-                        </div>
-                      </td>
-                      <td className="p-3.5">
-                        <span className={`p-1.5 rounded-lg inline-flex items-center justify-center ${getModeBg(item.mode)}`}>
-                          {getModeIcon(item.mode, "w-4 h-4")}
-                        </span>
-                      </td>
-                      <td className="p-3.5 text-right pr-5 whitespace-nowrap">
-                        <div className="font-bold text-on-surface">${item.cost.toFixed(2)}</div>
-                        <div className="text-[10px] text-secondary flex items-center justify-end gap-0.5 mt-0.5">
+                    <div className="text-right flex flex-col items-end gap-1.5">
+                      <div className="font-bold text-on-surface text-base">
+                        ${item.cost.toFixed(2)}
+                      </div>
+                      {item.co2Saved > 0 && (
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">
                           <Leaf className="w-3 h-3" />
-                          -{item.co2Saved} kg
+                          {item.co2Saved}kg saved
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {history.length === 0 && (
+                  <div className="text-center py-8 text-on-surface-variant">
+                    No recent transit trips found in your log.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
       </div>
-
     </div>
   );
 }

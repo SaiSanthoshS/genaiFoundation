@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
-import { AlarmClock, Check, Plus, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { AlarmClock, Check, Plus, Clock, Loader2 } from 'lucide-react';
 import { RouteOption, Reminder } from '../types';
-import { MOCK_ROUTES } from '../data';
+import { journeyService } from '../services/journeyService';
 
 interface ReminderPageProps {
   onAddReminder: (reminder: Omit<Reminder, 'id' | 'status'>) => void;
 }
 
 export default function ReminderPage({ onAddReminder }: ReminderPageProps) {
-  const [reminderRoute, setReminderRoute] = useState<RouteOption | null>(MOCK_ROUTES.default[0]);
+  const [reminderRoute, setReminderRoute] = useState<RouteOption | null>(null);
   const [reminderMinutes, setReminderMinutes] = useState(10);
   const [reminderType, setReminderType] = useState<'smart' | 'fixed'>('smart');
   const [reminderSuccess, setReminderSuccess] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    journeyService.searchRoutes('Auto', 'Auto')
+      .then(routes => {
+        if (routes.length > 0) setReminderRoute(routes[0]);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleSaveReminder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +42,16 @@ export default function ReminderPage({ onAddReminder }: ReminderPageProps) {
       setReminderSuccess(false);
     }, 2000);
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant">
+        <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
+        <p>Loading available paths...</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="max-w-md mx-auto space-y-6 animate-in fade-in duration-300 pt-8">

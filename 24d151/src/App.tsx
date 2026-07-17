@@ -1,8 +1,8 @@
-import React, { useState, Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import { RouteOption, Reminder } from './types';
-import { MOCK_REMINDERS } from './data';
+import { reminderService } from './services/reminderService';
 
 // Lazy loading pages
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -29,7 +29,7 @@ const INITIAL_USER = {
 
 export default function App() {
   const [selectedRoute, setSelectedRoute] = useState<RouteOption | undefined>(undefined);
-  const [reminders, setReminders] = useState<Reminder[]>(MOCK_REMINDERS);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
   const [user, setUser] = useState(INITIAL_USER);
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [plannerFrom, setPlannerFrom] = useState('');
@@ -37,6 +37,10 @@ export default function App() {
   
   // Quick alert counts (e.g. 3 active municipal alerts by default)
   const [alertCount, setAlertCount] = useState(3);
+
+  useEffect(() => {
+    reminderService.getReminders().then(setReminders).catch(console.error);
+  }, []);
 
   const handleStartPlanning = (fromStation: string, toStation: string) => {
     setPlannerFrom(fromStation);
@@ -48,30 +52,34 @@ export default function App() {
     setPlannerTo(toStation);
   };
 
-  const handleAddReminder = (newRem: Omit<Reminder, 'id' | 'status'>) => {
-    const reminder: Reminder = {
-      ...newRem,
-      id: `rem-${Date.now()}`,
-      status: 'active'
-    };
-    setReminders((prev) => [reminder, ...prev]);
+  const handleAddReminder = async (newRem: Omit<Reminder, 'id' | 'status'>) => {
+    try {
+      const added = await reminderService.addReminder(newRem);
+      setReminders((prev) => [added, ...prev]);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleToggleReminder = (id: string) => {
-    setReminders((prev) =>
-      prev.map((r) => {
-        if (r.id === id) {
-          const nextStatus: Reminder['status'] =
-            r.status === 'active' ? 'fired' : r.status === 'fired' ? 'dismissed' : 'active';
-          return { ...r, status: nextStatus };
-        }
-        return r;
-      })
-    );
+  const handleToggleReminder = async (id: string) => {
+    const reminder = reminders.find(r => r.id === id);
+    if (!reminder) return;
+    const nextStatus = reminder.status === 'active' ? 'fired' : reminder.status === 'fired' ? 'dismissed' : 'active';
+    try {
+      const updatedList = await reminderService.updateReminderStatus(id, nextStatus);
+      setReminders(updatedList);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleDeleteReminder = (id: string) => {
-    setReminders((prev) => prev.filter((r) => r.id !== id));
+  const handleDeleteReminder = async (id: string) => {
+    try {
+      const updatedList = await reminderService.deleteReminder(id);
+      setReminders(updatedList);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleUpdatePreferences = (prefs: any) => {

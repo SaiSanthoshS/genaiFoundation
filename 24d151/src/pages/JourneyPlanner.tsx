@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JourneyForm, { SearchOptions } from '../components/journey/JourneyForm';
 import RouteCard from '../components/journey/RouteCard';
 import DelayAlert from '../components/journey/DelayAlert';
 import { RouteOption, DelayInfo, Reminder } from '../types';
-import { MOCK_ROUTES, MOCK_DELAYS } from '../data';
-import { Sparkles, Calendar, Plus, Clock, Check, AlarmClock, AlertCircle } from 'lucide-react';
+import { journeyService } from '../services/journeyService';
+import { delayService } from '../services/delayService';
+import { Sparkles, Calendar, Plus, Clock, Check, AlarmClock, AlertCircle, Loader2 } from 'lucide-react';
 
 interface JourneyPlannerProps {
   initialFrom?: string;
@@ -25,7 +26,9 @@ export default function JourneyPlanner({
   const [to, setTo] = useState(initialTo);
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteOption[]>([]);
-  const [delays, setDelays] = useState<DelayInfo[]>(MOCK_DELAYS);
+  const [delays, setDelays] = useState<DelayInfo[]>([]);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [autoRerouteMessage, setAutoRerouteMessage] = useState<string | null>(null);
   
   // States for departure reminder form
   const [reminderRoute, setReminderRoute] = useState<RouteOption | null>(null);
@@ -33,16 +36,47 @@ export default function JourneyPlanner({
   const [reminderType, setReminderType] = useState<'smart' | 'fixed'>('smart');
   const [reminderSuccess, setReminderSuccess] = useState(false);
 
-  const handleSearch = (searchFrom: string, searchTo: string, options: SearchOptions) => {
+  // States to keep track of previous search options for retry
+  const [lastOptions, setLastOptions] = useState<SearchOptions | null>(null);
+
+  useEffect(() => {
+    delayService.getLiveDelays().then(setDelays).catch(console.error);
+  }, []);
+
+  // Automatic Re-routing logic
+  useEffect(() => {
+    if (selectedRoute && delays.length > 0 && routes.length > 0) {
+      // Check if selected route is impacted by any active delay
+      const impactingDelay = delays.find(d => selectedRoute.name.includes(d.line) || (selectedRoute.segments.some(s => d.line.includes(s.name))));
+      
+      if (impactingDelay && impactingDelay.alternativeRouteId) {
+        const altRoute = routes.find(r => r.id === impactingDelay.alternativeRouteId);
+        // If we found the alternate route and it's not the one we currently have selected
+        if (altRoute && altRoute.id !== selectedRoute.id) {
+          onSelectRoute(altRoute);
+          setAutoRerouteMessage(`Auto-rerouted to ${altRoute.name} due to delays on your previous route.`);
+          setTimeout(() => setAutoRerouteMessage(null), 8000);
+        }
+      }
+    }
+  }, [selectedRoute, delays, routes]);
+
+  const handleSearch = async (searchFrom: string, searchTo: string, options: SearchOptions) => {
     setLoading(true);
+    setSearchError(null);
     setFrom(searchFrom);
     setTo(searchTo);
+    setLastOptions(options);
     
-    // Simulate route calculations delay
-    setTimeout(() => {
-      const isAirport = searchTo.toLowerCase().includes('jfk') || searchFrom.toLowerCase().includes('jfk');
-      const baseRoutes = isAirport ? MOCK_ROUTES.specific : MOCK_ROUTES.default;
+    try {
+      const baseRoutes = await journeyService.searchRoutes(searchFrom, searchTo);
       
+      if (baseRoutes.length === 0) {
+        setSearchError('No routes found between these stations. Please try adjusting your filters or destination.');
+        setRoutes([]);
+        return;
+      }
+
       // Map and filter slightly based on options chosen
       const processed = baseRoutes.map(route => {
         let confidence = route.confidence;
@@ -68,8 +102,12 @@ export default function JourneyPlanner({
       if (smartest) {
         onSelectRoute(smartest);
       }
+    } catch (err) {
+      console.error('Failed to search routes', err);
+      setSearchError('Network error while computing routes. Our backend services might be under heavy load.');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const handleDismissDelay = (id: string) => {
@@ -129,6 +167,34 @@ export default function JourneyPlanner({
         initialTo={initialTo || to} 
         loading={loading} 
       />
+
+      {/* Error State */}
+      {searchError && !loading && (
+        <div className="bg-error/10 border border-error/20 rounded-2xl p-6 text-center max-w-lg mx-auto mt-4">
+          <AlertCircle className="w-8 h-8 text-error mx-auto mb-3" />
+          <h4 className="font-bold text-error text-sm mb-2">Search Failed</h4>
+          <p className="text-xs text-error font-medium mb-4 px-4 leading-relaxed">
+            {searchError}
+          </p>
+          <button 
+            onClick={() => handleSearch(from, to, lastOptions || { ecoFriendly: true, avoidCrowds: false, cheapest: false, fastest: true })}
+            className="px-6 py-2 bg-error text-white text-xs font-bold rounded-xl hover:bg-error/90 active:scale-95 transition-all shadow-md"
+          >
+            Retry Request
+          </button>
+        </div>
+      )}
+
+      {/* Auto Re-route Success Banner */}
+      {autoRerouteMessage && (
+        <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-start gap-3 animate-in slide-in-from-top-4 duration-500">
+          <Sparkles className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold text-primary text-sm block">AI Auto-Reroute Activated</span>
+            <span className="text-xs text-on-surface-variant font-medium mt-0.5 block">{autoRerouteMessage}</span>
+          </div>
+        </div>
+      )}
 
       {/* Delay Alert List */}
       {delays.length > 0 && (

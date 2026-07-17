@@ -31,16 +31,26 @@ export default function JourneyForm({ onSearch, initialFrom = '', initialTo = ''
 
   const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
   const handleSwap = () => {
     const temp = from;
     setFrom(to);
     setTo(temp);
+    setValidationError('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!from || !to) return;
+    if (!from || !to) {
+      setValidationError('Please enter both Origin and Destination stations.');
+      return;
+    }
+    if (from.toLowerCase() === to.toLowerCase()) {
+      setValidationError('Origin and Destination cannot be the same.');
+      return;
+    }
+    setValidationError('');
     onSearch(from, to, options);
   };
 
@@ -59,6 +69,12 @@ export default function JourneyForm({ onSearch, initialFrom = '', initialTo = ''
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {validationError && (
+          <div className="bg-error/10 text-error border border-error/20 p-3 rounded-lg text-sm font-bold flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-error" />
+            {validationError}
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
           
           {/* FROM Input */}
