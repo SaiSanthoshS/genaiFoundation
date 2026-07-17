@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuakeWatch — Earthquake Early Warning Notifier</title>
+  <meta name="description" content="Real-time earthquake monitoring with seismic intensity estimation. Get instant alerts for significant seismic events worldwide.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <script src="https://unpkg.com/globe.gl"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== SIDEBAR RAIL ===== -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><span class="material-symbols-outlined">sensors</span></div>
+    <span class="brand-text">QuakeWatch</span>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item active" data-page="globe" id="nav-globe">
+      <span class="material-symbols-outlined">public</span><span class="nav-label">Globe</span>
+    </li>
+    <li class="nav-item" data-page="notifications" id="nav-notifications">
+      <span class="material-symbols-outlined">notifications</span><span class="nav-label">Alerts</span>
+    </li>
+    <li class="nav-item" data-page="history" id="nav-history">
+      <span class="material-symbols-outlined">monitoring</span><span class="nav-label">History</span>
+    </li>
+    <li class="nav-item" data-page="tips" id="nav-tips">
+      <span class="material-symbols-outlined">health_and_safety</span><span class="nav-label">Preparedness</span>
+    </li>
+    <div class="nav-divider"></div>
+    <li class="nav-item" data-page="settings" id="nav-settings">
+      <span class="material-symbols-outlined">tune</span><span class="nav-label">Settings</span>
+    </li>
+  </ul>
+  <div class="agent-status" id="agent-status">
+    <div class="status-dot" id="status-dot"></div>
+    <span class="status-text" id="status-text">Idle</span>
+  </div>
+  <div class="loc-switcher" id="loc-switcher" style="position:relative">
+    <button class="loc-switcher-btn" id="loc-switcher-btn">
+      <span class="material-symbols-outlined">location_on</span>
+      <span class="loc-name" id="loc-active-name">No location</span>
+      <span class="material-symbols-outlined loc-arrow">expand_more</span>
+    </button>
+    <div class="loc-dropdown" id="loc-dropdown"></div>
+  </div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div class="main-wrap">
+  <header class="app-header">
+    <span class="header-title" id="page-title">Live Seismic Globe</span>
+    <div class="live-badge" id="live-badge"><div class="live-dot"></div><span>Live</span></div>
+    <button class="search-trigger" id="search-trigger" title="Search (Ctrl+K)">
+      <span class="material-symbols-outlined">search</span>
+      <span>Search</span>
+      <kbd>⌘K</kbd>
+    </button>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle high-contrast">
+      <span class="material-symbols-outlined">contrast</span>
+    </button>
+  </header>
+
+  <div class="page-container">
+    <!-- ===== GLOBE ===== -->
+    <section class="page globe-page active" id="page-globe">
+      <div id="globe-container">
+        <div class="globe-loading" id="globe-loading"><div class="spinner"></div><p class="text-sm text-muted">Loading seismic globe…</p></div>
+      </div>
+      <div class="globe-stat-bar" id="globe-stat-bar">
+        <div class="globe-stat"><span class="material-symbols-outlined">crisis_alert</span><div><div class="gs-label">Events</div><div class="gs-value" id="stat-events">—</div></div></div>
+        <div class="globe-stat"><span class="material-symbols-outlined">bolt</span><div><div class="gs-label">Strongest</div><div class="gs-value" id="stat-strongest">—</div></div></div>
+        <div class="globe-stat"><span class="material-symbols-outlined">near_me</span><div><div class="gs-label">Nearest</div><div class="gs-value" id="stat-nearest">—</div></div></div>
+        <div class="globe-stat"><span class="material-symbols-outlined">update</span><div><div class="gs-label">Updated</div><div class="gs-value" id="stat-updated">—</div></div></div>
+      </div>
+      <div class="globe-legend-wrap">
+        <button class="globe-legend-toggle" id="legend-toggle"><span class="material-symbols-outlined">info</span>Legend</button>
+        <div class="globe-legend-panel" id="legend-panel">
+          <div class="legend-section">
+            <h4>Depth Color</h4>
+            <div class="legend-row"><div class="legend-dot" style="background:#ef4444"></div>Shallow (&lt;70 km)</div>
+            <div class="legend-row"><div class="legend-dot" style="background:#f97316"></div>Mid (70–300 km)</div>
+            <div class="legend-row"><div class="legend-dot" style="background:#eab308"></div>Deep (&gt;300 km)</div>
+            <div class="legend-row"><div class="legend-dot" style="background:#818cf8"></div>Your location</div>
+          </div>
+          <div class="legend-section">
+            <h4>Magnitude Size</h4>
+            <div class="legend-size"><div class="legend-circle" style="width:6px;height:6px"></div><span>M 2</span></div>
+            <div class="legend-size"><div class="legend-circle" style="width:12px;height:12px"></div><span>M 4</span></div>
+            <div class="legend-size"><div class="legend-circle" style="width:22px;height:22px"></div><span>M 6+</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="globe-tooltip" id="globe-tooltip">
+        <h4 id="tip-title">—</h4>
+        <div class="tooltip-row" id="tip-mag"></div>
+        <div class="tooltip-row" id="tip-depth"></div>
+        <div class="tooltip-row" id="tip-time"></div>
+      </div>
+    </section>
+
+    <!-- ===== NOTIFICATIONS ===== -->
+    <section class="page" id="page-notifications">
+      <div class="notif-toolbar">
+        <h2>Alerts <span class="notif-count-badge" id="notif-count">0</span></h2>
+        <div class="notif-filters">
+          <select class="filter-select" id="notif-filter-risk"><option value="all">All Levels</option><option value="low">Low</option><option value="moderate">Moderate</option><option value="high">High</option><option value="extreme">Extreme</option><option value="critical">Critical</option></select>
+          <select class="filter-select" id="notif-filter-time"><option value="all">All Time</option><option value="today">Today</option><option value="week">This Week</option><option value="month">This Month</option></select>
+          <input class="notif-search" id="notif-search" placeholder="Search alerts…">
+        </div>
+        <button class="btn btn-ghost" id="btn-clear-notifs"><span class="material-symbols-outlined">delete_sweep</span>Clear</button>
+      </div>
+      <div id="notif-list-wrap">
+        <div class="empty-state" id="notif-empty">
+          <span class="material-symbols-outlined">notifications_off</span>
+          <h3>No Alerts Yet</h3>
+          <p>Set a location and activate monitoring to receive earthquake alerts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HISTORY ===== -->
+    <section class="page" id="page-history">
+      <div class="history-toolbar">
+        <h2>Seismic History</h2>
+        <div class="date-range">
+          <input type="date" class="date-input" id="history-start">
+          <span class="text-muted text-sm">to</span>
+          <input type="date" class="date-input" id="history-end">
+          <button class="btn btn-secondary" id="btn-apply-dates"><span class="material-symbols-outlined" style="font-size:16px">refresh</span></button>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-scope-global"><span class="material-symbols-outlined">public</span>Global</button>
+          <button class="toggle-btn" id="btn-scope-local"><span class="material-symbols-outlined">near_me</span>Near Me</button>
+          <button class="toggle-btn" id="btn-scope-compare"><span class="material-symbols-outlined">compare</span>Compare</button>
+        </div>
+      </div>
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card"><h4>Total Events</h4><div class="sv" id="hist-total">—</div></div>
+        <div class="stat-card"><h4>Largest</h4><div class="sv" id="hist-largest">—</div></div>
+        <div class="stat-card"><h4>Average</h4><div class="sv" id="hist-average">—</div></div>
+        <div class="stat-card"><h4>This Month</h4><div class="sv" id="hist-month">—</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-loading" id="chart-loading"><div class="spinner"></div></div>
+        <canvas id="mag-chart"></canvas>
+      </div>
+      <div class="chart-card"><h3>Monthly Trend</h3><canvas id="trend-chart"></canvas></div>
+    </section>
+
+    <!-- ===== TIPS ===== -->
+    <section class="page" id="page-tips">
+      <div class="risk-banner" id="risk-banner">
+        <div class="risk-icon-box moderate" id="risk-icon-box"><span class="material-symbols-outlined">shield</span></div>
+        <div class="risk-info">
+          <h3 id="risk-title">Assessing Risk…</h3>
+          <p id="risk-desc">Set a location and view Historical Analysis to compute your seismic risk level.</p>
+          <div class="mmi-scale" id="mmi-scale">
+            <div class="mmi-seg" style="background:var(--seismic-low)"></div>
+            <div class="mmi-seg" style="background:var(--seismic-moderate)"></div>
+            <div class="mmi-seg" style="background:var(--seismic-high)"></div>
+            <div class="mmi-seg" style="background:var(--seismic-extreme)"></div>
+            <div class="mmi-seg" style="background:var(--seismic-critical)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tips-grid" id="tips-grid"></div>
+      <div class="supply-card" id="supply-card"><h3><span class="material-symbols-outlined" style="color:var(--accent-glow)">inventory_2</span>Emergency Supply Checklist</h3><div id="checklist-items"></div></div>
+    </section>
+
+    <!-- ===== SETTINGS ===== -->
+    <section class="page" id="page-settings">
+      <h2 style="margin-bottom:20px">Settings</h2>
+      <div class="settings-grid">
+        <div class="setting-card">
+          <div class="setting-row">
+            <div><div class="setting-label">Notification Threshold (MMI)</div><div class="setting-desc">Minimum estimated intensity to trigger browser notification</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><input type="range" class="setting-range" id="set-mmi" min="1" max="8" step="0.5" value="4"><span class="setting-range-val" id="set-mmi-val">4.0</span></div>
+          </div>
+        </div>
+        <div class="setting-card">
+          <div class="setting-row">
+            <div><div class="setting-label">Units</div><div class="setting-desc">Distance display preference</div></div>
+            <div class="toggle-group"><button class="toggle-btn active" id="set-km">km</button><button class="toggle-btn" id="set-mi">mi</button></div>
+          </div>
+        </div>
+        <div class="setting-card">
+          <div class="setting-row">
+            <div><div class="setting-label">Sound Alerts</div><div class="setting-desc">Play a chime for critical events (MMI ≥ 6)</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="set-sound"><span class="slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-card">
+          <div class="setting-row">
+            <div><div class="setting-label">High-Contrast Mode</div><div class="setting-desc">Increase contrast and disable blur for accessibility</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="set-contrast"><span class="slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-card">
+          <h3 style="margin-bottom:12px">Saved Locations</h3>
+          <div id="settings-locations"></div>
+          <button class="btn btn-secondary" id="btn-add-loc" style="margin-top:10px;width:100%"><span class="material-symbols-outlined">add</span>Add Location</button>
+        </div>
+        <div class="setting-card">
+          <div class="setting-row">
+            <div><div class="setting-label">Clear All Data</div><div class="setting-desc">Reset all settings, locations, and alert history</div></div>
+            <button class="btn btn-danger" id="btn-clear-data"><span class="material-symbols-outlined">delete_forever</span>Clear</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ===== ONBOARDING OVERLAY ===== -->
+<div class="onboarding" id="onboarding">
+  <div class="onboard-card">
+    <div class="onboard-progress" id="onboard-progress"></div>
+    <div class="onboard-step active" id="onboard-s1">
+      <div class="step-icon"><span class="material-symbols-outlined">my_location</span></div>
+      <h2>Set Your Location</h2>
+      <p>Register your coordinates to receive personalized earthquake alerts with estimated shaking intensity.</p>
+      <div class="method-row"><button class="btn btn-secondary" id="ob-gps"><span class="material-symbols-outlined">gps_fixed</span>Use GPS</button></div>
+      <div class="input-group"><input class="input" id="ob-address" placeholder="City, address, or landmark…"><button class="btn btn-secondary" id="ob-geocode"><span class="material-symbols-outlined">search</span></button></div>
+      <div id="ob-result" style="display:none"></div>
+      <div class="onboard-actions"><button class="btn btn-primary btn-lg" id="ob-next1" disabled>Next</button></div>
+    </div>
+    <div class="onboard-step" id="onboard-s2">
+      <div class="step-icon"><span class="material-symbols-outlined">notifications_active</span></div>
+      <h2>Enable Notifications</h2>
+      <p>Allow browser notifications to receive instant alerts when a significant earthquake is detected near you.</p>
+      <div class="onboard-actions">
+        <button class="btn btn-primary btn-lg" id="ob-enable-notif"><span class="material-symbols-outlined">notifications</span>Enable Notifications</button>
+        <button class="btn btn-ghost" id="ob-skip-notif">Skip</button>
+      </div>
+    </div>
+    <div class="onboard-step" id="onboard-s3">
+      <div class="step-icon"><span class="material-symbols-outlined">shield</span></div>
+      <h2>You're All Set</h2>
+      <p>QuakeWatch is now monitoring seismic activity. You'll receive alerts when earthquakes may affect your location.</p>
+      <div id="ob-risk-summary" style="margin:16px 0;padding:14px;background:var(--surface-bg);border:1px solid var(--surface-border);border-radius:var(--r-md);text-align:left">
+        <div style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:4px">Your monitoring is active at:</div>
+        <div id="ob-summary-loc" style="font-weight:600;font-size:var(--text-base)">—</div>
+      </div>
+      <div class="onboard-actions"><button class="btn btn-primary btn-lg" id="ob-finish"><span class="material-symbols-outlined">check</span>Start Monitoring</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMMAND BAR ===== -->
+<div class="cmd-overlay" id="cmd-overlay">
+  <div class="cmd-box">
+    <div class="cmd-input-wrap"><span class="material-symbols-outlined">search</span><input class="cmd-input" id="cmd-input" placeholder="Search locations, earthquakes, or commands…" autofocus></div>
+    <div class="cmd-results" id="cmd-results"></div>
+    <div class="cmd-hint"><span>↑↓ Navigate</span><span>↵ Select</span><span>Esc Close</span></div>
+  </div>
+</div>
+
+<!-- ===== EVENT DETAIL PANEL ===== -->
+<div class="event-panel" id="event-panel">
+  <button class="ep-close" id="ep-close"><span class="material-symbols-outlined">close</span></button>
+  <div class="ep-mag"><div class="display-num" id="ep-mag-num">—</div><div class="mag-sub">Magnitude</div></div>
+  <h3 id="ep-title" style="margin-bottom:16px;text-align:center;text-transform:none;letter-spacing:0">—</h3>
+  <div class="ep-grid">
+    <div class="ep-cell"><h4>Depth</h4><div class="ep-val" id="ep-depth">—</div></div>
+    <div class="ep-cell"><h4>Distance</h4><div class="ep-val" id="ep-distance">—</div></div>
+    <div class="ep-cell"><h4>Est. MMI</h4><div class="ep-val" id="ep-mmi">—</div></div>
+    <div class="ep-cell"><h4>Risk Level</h4><div class="ep-val" id="ep-risk">—</div></div>
+    <div class="ep-cell"><h4>Time</h4><div class="ep-val" id="ep-time">—</div></div>
+    <div class="ep-cell"><h4>Coordinates</h4><div class="ep-val" id="ep-coords">—</div></div>
+  </div>
+  <div class="ep-actions">
+    <button class="btn btn-secondary" id="ep-share" style="flex:1"><span class="material-symbols-outlined">share</span>Share</button>
+    <a class="btn btn-secondary" id="ep-usgs" href="#" target="_blank" rel="noopener" style="flex:1"><span class="material-symbols-outlined">open_in_new</span>USGS</a>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
