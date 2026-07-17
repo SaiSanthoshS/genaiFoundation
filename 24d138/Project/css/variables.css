@@ -1,0 +1,157 @@
+/* ========================================
+   DESIGN TOKENS — Election Tracker 2024
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Base Dark Theme ---- */
+  --bg-primary:       #060a14;
+  --bg-secondary:     #0c1221;
+  --bg-tertiary:      #111827;
+  --bg-elevated:      #161f33;
+  --bg-surface:       rgba(17, 24, 39, 0.65);
+
+  /* ---- Glass ---- */
+  --glass-bg:         rgba(15, 23, 42, 0.55);
+  --glass-border:     rgba(99, 118, 163, 0.18);
+  --glass-blur:       16px;
+  --glass-bg-hover:   rgba(20, 30, 55, 0.7);
+
+  /* ---- Text ---- */
+  --text-primary:     #f1f5f9;
+  --text-secondary:   #94a3b8;
+  --text-tertiary:    #64748b;
+  --text-muted:       #475569;
+  --text-accent:      #60a5fa;
+
+  /* ---- Party Colors ---- */
+  --party-bjp:        #FF6B00;
+  --party-bjp-glow:   rgba(255, 107, 0, 0.35);
+  --party-inc:        #00BFA6;
+  --party-inc-glow:   rgba(0, 191, 166, 0.35);
+  --party-tmc:        #2ECC40;
+  --party-tmc-glow:   rgba(46, 204, 64, 0.35);
+  --party-dmk:        #E74C3C;
+  --party-dmk-glow:   rgba(231, 76, 60, 0.35);
+  --party-sp:         #E63946;
+  --party-sp-glow:    rgba(230, 57, 70, 0.35);
+  --party-aap:        #2196F3;
+  --party-aap-glow:   rgba(33, 150, 243, 0.35);
+  --party-bsp:        #3F51B5;
+  --party-bsp-glow:   rgba(63, 81, 181, 0.35);
+  --party-jdu:        #4CAF50;
+  --party-jdu-glow:   rgba(76, 175, 80, 0.35);
+  --party-ss:         #FF9800;
+  --party-ss-glow:    rgba(255, 152, 0, 0.35);
+  --party-ncp:        #00BCD4;
+  --party-ncp-glow:   rgba(0, 188, 212, 0.35);
+  --party-tdp:        #FFEB3B;
+  --party-tdp-glow:   rgba(255, 235, 59, 0.35);
+  --party-ysrcp:      #1565C0;
+  --party-ysrcp-glow: rgba(21, 101, 192, 0.35);
+  --party-bjd:        #8BC34A;
+  --party-bjd-glow:   rgba(139, 195, 74, 0.35);
+  --party-oth:        #78909C;
+  --party-oth-glow:   rgba(120, 144, 156, 0.35);
+  --party-ind:        #9E9E9E;
+  --party-ind-glow:   rgba(158, 158, 158, 0.35);
+
+  /* ---- Semantic ---- */
+  --color-success:    #22c55e;
+  --color-danger:     #ef4444;
+  --color-warning:    #f59e0b;
+  --color-info:       #3b82f6;
+  --color-upset:      #f43f5e;
+  --color-gain:       #10b981;
+  --color-hold:       #6366f1;
+
+  /* ---- Accent Gradients ---- */
+  --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  --gradient-fire:    linear-gradient(135deg, #f43f5e, #ff6b00);
+  --gradient-ocean:   linear-gradient(135deg, #06b6d4, #3b82f6);
+  --gradient-success: linear-gradient(135deg, #10b981, #22c55e);
+  --gradient-dark:    linear-gradient(145deg, #0c1221 0%, #111827 50%, #0f172a 100%);
+
+  /* ---- Typography ---- */
+  --font-ui:          'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:        'JetBrains Mono', 'Fira Code', monospace;
+
+  --fs-xs:            0.6875rem;   /* 11px */
+  --fs-sm:            0.75rem;     /* 12px */
+  --fs-base:          0.875rem;    /* 14px */
+  --fs-md:            1rem;        /* 16px */
+  --fs-lg:            1.125rem;    /* 18px */
+  --fs-xl:            1.375rem;    /* 22px */
+  --fs-2xl:           1.75rem;     /* 28px */
+  --fs-3xl:           2.25rem;     /* 36px */
+  --fs-4xl:           3rem;        /* 48px */
+  --fs-hero:          3.75rem;     /* 60px */
+
+  --fw-light:         300;
+  --fw-normal:        400;
+  --fw-medium:        500;
+  --fw-semibold:      600;
+  --fw-bold:          700;
+  --fw-extrabold:     800;
+  --fw-black:         900;
+
+  --lh-tight:         1.15;
+  --lh-normal:        1.5;
+  --lh-relaxed:       1.7;
+
+  /* ---- Spacing ---- */
+  --space-1:          0.25rem;
+  --space-2:          0.5rem;
+  --space-3:          0.75rem;
+  --space-4:          1rem;
+  --space-5:          1.25rem;
+  --space-6:          1.5rem;
+  --space-8:          2rem;
+  --space-10:         2.5rem;
+  --space-12:         3rem;
+  --space-16:         4rem;
+
+  /* ---- Border Radius ---- */
+  --radius-sm:        6px;
+  --radius-md:        10px;
+  --radius-lg:        14px;
+  --radius-xl:        20px;
+  --radius-2xl:       28px;
+  --radius-pill:      100px;
+  --radius-round:     50%;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:        0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md:        0 4px 14px rgba(0, 0, 0, 0.35);
+  --shadow-lg:        0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-xl:        0 16px 50px rgba(0, 0, 0, 0.5);
+  --shadow-glow:      0 0 25px rgba(99, 102, 241, 0.2);
+  --shadow-inner:     inset 0 1px 4px rgba(0, 0, 0, 0.3);
+
+  /* ---- Transitions ---- */
+  --ease-out:         cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:      cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:    150ms;
+  --duration-normal:  250ms;
+  --duration-slow:    400ms;
+  --duration-slower:  600ms;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:           1;
+  --z-dropdown:       100;
+  --z-sticky:         200;
+  --z-overlay:        300;
+  --z-modal:          400;
+  --z-toast:          500;
+  --z-tooltip:        600;
+
+  /* ---- Layout ---- */
+  --header-height:    64px;
+  --sidebar-width:    340px;
+  --feed-width:       360px;
+  --max-content:      1600px;
+  --majority-mark:    272;
+  --total-seats:      543;
+}

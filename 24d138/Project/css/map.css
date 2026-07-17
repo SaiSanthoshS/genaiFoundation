@@ -1,0 +1,170 @@
+/* ========================================
+   MAP STYLES — SVG India Map
+   ======================================== */
+
+.map-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: radial-gradient(circle at center, rgba(99, 118, 163, 0.05) 0%, transparent 70%);
+  border-radius: var(--radius-xl);
+}
+
+.india-map {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+}
+
+.india-map .state-path {
+  fill: rgba(99, 118, 163, 0.15);
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.india-map .state-path:hover {
+  stroke: rgba(255, 255, 255, 0.8);
+  stroke-width: 2;
+  filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.india-map .state-path.active {
+  stroke: #fff;
+  stroke-width: 2.5;
+  filter: brightness(1.5) drop-shadow(0 0 12px rgba(255, 255, 255, 0.6));
+  transform: scale(1.03);
+}
+
+/* ---- Party Color Fills (Rich & Vibrant) ---- */
+.india-map .state-path.party-bjp   { fill: var(--party-bjp); }
+.india-map .state-path.party-inc   { fill: var(--party-inc); }
+.india-map .state-path.party-tmc   { fill: var(--party-tmc); }
+.india-map .state-path.party-dmk   { fill: var(--party-dmk); }
+.india-map .state-path.party-sp    { fill: var(--party-sp);  }
+.india-map .state-path.party-aap   { fill: var(--party-aap); }
+.india-map .state-path.party-jdu   { fill: var(--party-jdu); }
+.india-map .state-path.party-tdp   { fill: var(--party-tdp); }
+.india-map .state-path.party-oth   { fill: var(--party-oth); }
+.india-map .state-path.party-ind   { fill: var(--party-ind); }
+
+/* ---- Partial declaration opacity ---- */
+.india-map .state-path.declared-partial {
+  fill-opacity: 0.6;
+}
+.india-map .state-path.declared-full {
+  fill-opacity: 0.9;
+}
+
+/* ---- Just-declared pulse ---- */
+.india-map .state-path.just-declared {
+  animation: mapPulse 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes mapPulse {
+  0%   { filter: brightness(2) drop-shadow(0 0 20px currentColor); transform: scale(1.05); stroke: #fff; stroke-width: 3; }
+  50%  { filter: brightness(1.5) drop-shadow(0 0 10px currentColor); transform: scale(1.02); stroke: rgba(255,255,255,0.5); stroke-width: 2; }
+  100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+}
+
+/* ---- Map Tooltip (Glassmorphism) ---- */
+.map-tooltip {
+  position: fixed;
+  padding: 12px 16px;
+  background: rgba(15, 20, 35, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: var(--z-tooltip);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px) scale(0.95);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 200px;
+}
+.map-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.map-tooltip__name {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-base);
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+.map-tooltip__stats {
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px;
+}
+.map-tooltip__party {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.map-tooltip__party-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+.map-tooltip__party-name {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  color: #fff;
+}
+
+/* ---- Map Legend ---- */
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-pill);
+  margin-top: var(--space-4);
+}
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.map-legend__color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+/* ---- Map Controls ---- */
+.map-controls {
+  position: absolute;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
