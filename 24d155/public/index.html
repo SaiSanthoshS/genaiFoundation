@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NewsBrief — Your Personalised AI News Briefing</title>
+  <meta name="description" content="Pick your topics and sources. Our AI agent fetches, classifies, and summarises the news that matters to you every morning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Decorative background orbs -->
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="navbar-inner">
+        <a href="index.html" class="logo" aria-label="NewsBrief home">
+          <div class="logo-icon" aria-hidden="true">NB</div>
+          <span class="logo-text">News<span>Brief</span></span>
+        </a>
+        <a href="dashboard.html" class="btn btn-ghost" id="nav-dashboard-btn"
+           style="display:none;" aria-label="Go to dashboard">
+          View Dashboard →
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ── HERO ───────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
+    <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
+
+    <div class="z-1">
+      <div class="hero-badge" role="note">
+        <span aria-hidden="true">🤖</span>
+        <span>AI-Powered News Agent</span>
+      </div>
+
+      <h1 id="hero-title">
+        Your World,<br />
+        <span class="gradient-text">Curated Daily</span>
+      </h1>
+
+      <p>
+        Pick your topics and let our AI agent fetch, classify, and summarise
+        the stories that matter to you — every morning.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── SETUP FORM ─────────────────────────────────────── -->
+  <main class="container z-1" style="padding-bottom: 88px;">
+
+    <!-- Step 1 — Topics -->
+    <section class="section" aria-labelledby="topics-heading">
+      <div class="section-header">
+        <div class="section-number" aria-hidden="true">1</div>
+        <div>
+          <h2 class="section-title" id="topics-heading">Choose Your Topics</h2>
+          <p class="section-subtitle">Select the categories you want covered in your briefing</p>
+        </div>
+      </div>
+      <div class="topic-grid" id="topic-grid" role="group" aria-label="Topic selection">
+        <!-- Rendered by setup.js -->
+      </div>
+    </section>
+
+    <!-- Step 2 — Sources -->
+    <section class="section" aria-labelledby="sources-heading">
+      <div class="section-header">
+        <div class="section-number" aria-hidden="true">2</div>
+        <div>
+          <h2 class="section-title" id="sources-heading">Choose Your Sources</h2>
+          <p class="section-subtitle">The agent prioritises articles from your preferred sources</p>
+        </div>
+      </div>
+      <div class="source-grid" id="source-grid" role="group" aria-label="Source selection">
+        <!-- Rendered by setup.js -->
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg" id="activate-btn"
+              onclick="activateAgent()" disabled aria-disabled="true">
+        <span aria-hidden="true">🚀</span>
+        Save &amp; Activate Agent
+      </button>
+      <p id="cta-hint" class="mt-4" style="font-size: 13px; color: var(--text-muted);">
+        Select at least one topic to continue
+      </p>
+    </div>
+
+  </main>
+
+  <!-- ── AGENT PROCESSING MODAL ─────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog"
+       aria-modal="true" aria-labelledby="modal-title" aria-live="polite">
+    <div class="modal">
+      <div class="agent-spinner" aria-hidden="true">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+
+      <h2 class="agent-title" id="modal-title">Agent Running</h2>
+      <p class="agent-subtitle" id="modal-subtitle">
+        Initialising your personalised news pipeline…
+      </p>
+
+      <ol class="agent-steps" id="agent-steps" aria-label="Pipeline steps">
+        <li class="agent-step" id="step-0">
+          <div class="step-indicator" aria-hidden="true">1</div>
+          <span class="step-label">Fetching articles from your sources…</span>
+        </li>
+        <li class="agent-step" id="step-1">
+          <div class="step-indicator" aria-hidden="true">2</div>
+          <span class="step-label">Classifying articles by topic…</span>
+        </li>
+        <li class="agent-step" id="step-2">
+          <div class="step-indicator" aria-hidden="true">3</div>
+          <span class="step-label">Scoring sentiment with AI…</span>
+        </li>
+        <li class="agent-step" id="step-3">
+          <div class="step-indicator" aria-hidden="true">4</div>
+          <span class="step-label">Generating AI summaries…</span>
+        </li>
+        <li class="agent-step" id="step-4">
+          <div class="step-indicator" aria-hidden="true">5</div>
+          <span class="step-label">Assembling your briefing…</span>
+        </li>
+      </ol>
+
+      <div class="progress-bar mt-8" role="progressbar"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+           aria-label="Agent pipeline progress">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST ──────────────────────────────────────────── -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span id="toast-icon" aria-hidden="true">✅</span>
+    <span id="toast-msg">Profile saved!</span>
+  </div>
+
+  <script src="js/setup.js"></script>
+</body>
+</html>

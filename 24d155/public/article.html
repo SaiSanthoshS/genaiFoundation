@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NewsBrief — Article Analysis</title>
+  <meta name="description" content="AI-generated summary, sentiment analysis, and key highlights for this news article." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="navbar-inner">
+        <a href="index.html" class="logo" aria-label="NewsBrief home">
+          <div class="logo-icon" aria-hidden="true">NB</div>
+          <span class="logo-text">News<span>Brief</span></span>
+        </a>
+        <a href="dashboard.html" class="btn btn-secondary" aria-label="Back to dashboard">
+          ← Dashboard
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ── ARTICLE CONTENT ────────────────────────────────── -->
+  <main class="container-narrow">
+    <div class="article-view" id="article-view" aria-live="polite">
+      <!-- Rendered by article.js -->
+    </div>
+  </main>
+
+  <script src="js/article.js"></script>
+</body>
+</html>

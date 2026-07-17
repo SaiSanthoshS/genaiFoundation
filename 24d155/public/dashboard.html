@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NewsBrief — Daily Briefing Dashboard</title>
+  <meta name="description" content="Your personalised AI-curated news briefing organised by topic, with sentiment analysis and summaries." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="navbar-inner">
+        <a href="index.html" class="logo" aria-label="NewsBrief home">
+          <div class="logo-icon" aria-hidden="true">NB</div>
+          <span class="logo-text">News<span>Brief</span></span>
+        </a>
+        <span class="nav-date" id="nav-date" aria-live="polite"></span>
+        <div class="nav-actions">
+          <button class="btn btn-secondary" id="run-agent-btn"
+                  onclick="runAgent()" aria-label="Re-run AI agent pipeline">
+            <span aria-hidden="true">⚡</span> Run Agent Now
+          </button>
+          <a href="index.html" class="btn btn-ghost" aria-label="Edit interest profile">
+            Edit Profile
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ── MAIN ───────────────────────────────────────────── -->
+  <main class="container" style="padding-bottom: 64px;">
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1 class="dashboard-title" id="greeting-title">Good Morning ☀️</h1>
+      <p class="dashboard-subtitle" id="greeting-subtitle">
+        Your AI briefing is ready. Here's what happened in your world.
+      </p>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="stats-bar" role="region" aria-label="Briefing statistics">
+      <div class="stat">
+        <span class="stat-value" id="stat-articles">—</span>
+        <span class="stat-label">Articles Analysed</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat">
+        <span class="stat-value" id="stat-topics">—</span>
+        <span class="stat-label">Topics Covered</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat">
+        <span class="stat-value" id="stat-positive">—</span>
+        <span class="stat-label">Positive Sentiment</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat">
+        <span class="stat-value" id="stat-time">—</span>
+        <span class="stat-label">Generated At</span>
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="tabs-wrapper" id="tabs-wrapper" role="navigation" aria-label="Category tabs">
+      <div class="tabs" id="tabs-container" role="tablist">
+        <!-- Rendered by dashboard.js -->
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div id="tab-content" role="tabpanel" aria-live="polite">
+      <!-- Rendered by dashboard.js -->
+    </div>
+
+    <!-- Empty State (no profile) -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <span class="empty-icon" aria-hidden="true">📰</span>
+      <h2 class="empty-title">No briefing yet</h2>
+      <p class="empty-subtitle">Set up your interest profile so the agent can build your personalised briefing.</p>
+      <a href="index.html" class="btn btn-primary">Set Up My Profile →</a>
+    </div>
+
+  </main>
+
+  <!-- ── AGENT MODAL ────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog"
+       aria-modal="true" aria-labelledby="modal-title" aria-live="polite">
+    <div class="modal">
+      <div class="agent-spinner" aria-hidden="true">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <h2 class="agent-title" id="modal-title">Refreshing Briefing</h2>
+      <p class="agent-subtitle" id="modal-subtitle">Running agent pipeline…</p>
+      <ol class="agent-steps" id="agent-steps" aria-label="Pipeline steps">
+        <li class="agent-step" id="step-0"><div class="step-indicator" aria-hidden="true">1</div><span class="step-label">Fetching latest articles…</span></li>
+        <li class="agent-step" id="step-1"><div class="step-indicator" aria-hidden="true">2</div><span class="step-label">Classifying and ranking…</span></li>
+        <li class="agent-step" id="step-2"><div class="step-indicator" aria-hidden="true">3</div><span class="step-label">Re-scoring sentiment…</span></li>
+        <li class="agent-step" id="step-3"><div class="step-indicator" aria-hidden="true">4</div><span class="step-label">Updating summaries…</span></li>
+        <li class="agent-step" id="step-4"><div class="step-indicator" aria-hidden="true">5</div><span class="step-label">Assembling updated briefing…</span></li>
+      </ol>
+      <div class="progress-bar mt-8" role="progressbar"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST ──────────────────────────────────────────── -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span id="toast-icon" aria-hidden="true">✅</span>
+    <span id="toast-msg">Briefing updated!</span>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
