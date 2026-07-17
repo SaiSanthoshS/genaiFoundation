@@ -11,13 +11,13 @@ interface ReminderCardProps {
 }
 
 export default function ReminderCard({ reminder, onToggleStatus, onDelete }: ReminderCardProps) {
-  const isFired = reminder.status === 'fired';
+  const isTriggered = reminder.status === 'triggered';
   const isActive = reminder.status === 'active';
 
   return (
     <div 
       className={`glass-card p-5 transition-all duration-300 border relative ${
-        isFired 
+        isTriggered 
           ? 'border-secondary bg-secondary/[0.02] ring-2 ring-secondary/15 animate-pulse' 
           : isActive 
           ? 'border-slate-200' 
@@ -27,7 +27,7 @@ export default function ReminderCard({ reminder, onToggleStatus, onDelete }: Rem
       <div className="flex justify-between items-start gap-3">
         {/* Departure Mode Icon */}
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-          isFired ? 'bg-secondary text-white' : 'bg-primary/10 text-primary'
+          isTriggered ? 'bg-secondary text-white' : 'bg-primary/10 text-primary'
         }`}>
           {getModeIcon(reminder.mode, "w-5 h-5")}
         </div>
@@ -77,7 +77,7 @@ export default function ReminderCard({ reminder, onToggleStatus, onDelete }: Rem
           <button
             onClick={() => onToggleStatus(reminder.id)}
             className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
-              isFired
+              isTriggered
                 ? 'bg-secondary text-white border-secondary'
                 : isActive
                 ? 'bg-primary text-white border-primary'

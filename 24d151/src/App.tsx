@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import { RouteOption, Reminder } from './types';
 import { reminderService } from './services/reminderService';
+import { useNotifications } from './hooks/useNotifications';
 
 // Lazy loading pages
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -75,7 +76,7 @@ export default function App() {
   const handleToggleReminder = async (id: string) => {
     const reminder = reminders.find(r => r.id === id);
     if (!reminder) return;
-    const nextStatus = reminder.status === 'active' ? 'fired' : reminder.status === 'fired' ? 'dismissed' : 'active';
+    const nextStatus = reminder.status === 'active' ? 'triggered' : reminder.status === 'triggered' ? 'dismissed' : 'active';
     try {
       const updatedList = await reminderService.updateReminderStatus(id, nextStatus);
       setReminders(updatedList);

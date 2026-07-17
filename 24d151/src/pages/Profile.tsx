@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { HistoryItem, Reminder } from '../types';
 import { userService } from '../services/userService';
 import { reminderService } from '../services/reminderService';
-import { Reminder } from '../types';
 import ProfileCard from '../components/profile/ProfileCard';
 import ReminderCard from '../components/profile/ReminderCard';
 import { History, Award, Leaf, Calendar, Loader2, AlarmClock, Clock } from 'lucide-react';
@@ -39,7 +38,7 @@ export default function Profile({ user, reminders, onToggleReminder, onDeleteRem
       {/* Profile Setup / Bio Card */}
       <ProfileCard 
         user={user} 
-        onUpdatePreferences={onUpdatePreferences} 
+        onSavePreferences={onUpdatePreferences} 
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -58,7 +57,7 @@ export default function Profile({ user, reminders, onToggleReminder, onDeleteRem
               <ReminderCard
                 key={rem.id}
                 reminder={rem}
-                onToggle={() => onToggleReminder(rem.id)}
+                onToggleStatus={() => onToggleReminder(rem.id)}
                 onDelete={() => onDeleteReminder(rem.id)}
               />
             ))}

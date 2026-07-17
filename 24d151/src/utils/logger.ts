@@ -1,6 +1,6 @@
 export const logger = {
   info: (msg: string, ...data: any[]) => {
-    if (import.meta.env.MODE !== 'production') {
+    if ((import.meta as any).env.MODE !== 'production') {
       console.info(`[INFO] ${msg}`, ...data);
     }
   },
