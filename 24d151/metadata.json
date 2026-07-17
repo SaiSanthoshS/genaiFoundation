@@ -1,0 +1,6 @@
+{
+  "name": "Smart Public Transit Journey Planner",
+  "description": "An AI-powered multi-modal transit journey planner featuring real-time delay predictions, eco-friendly route alternatives, live GPS vehicle tracking, custom departure reminders, interactive copilot chats, and carbon footprint analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
