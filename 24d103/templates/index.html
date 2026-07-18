@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Smart Medication Reminder & Tracker</title>
+</head>
+
+<body>
+
+    <h1>Smart Medication Reminder & Tracker</h1>
+
+    <form action="/generate" method="POST">
+
+        <label>Medication Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Dosage:</label><br>
+        <input type="text" name="dosage" required><br><br>
+
+        <label>Frequency:</label><br>
+        <input type="text" name="frequency" placeholder="e.g. Twice daily" required><br><br>
+
+        <label>Stock Remaining:</label><br>
+        <input type="number" name="stock" required><br><br>
+
+        <label>Doses Per Day:</label><br>
+        <input type="number" name="doses" required><br><br>
+
+        <button type="submit">Generate Report</button>
+
+    </form>
+
+</body>
+
+</html>
