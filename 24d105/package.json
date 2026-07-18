@@ -1,0 +1,17 @@
+{
+  "name": "scanline-pr-review-agent",
+  "version": "1.0.0",
+  "description": "AI-powered PR review agent: fetches a GitHub PR diff, analyzes it for logic errors, code smells and known security vulnerabilities, posts inline comments on the PR, and generates a severity-scored report.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
