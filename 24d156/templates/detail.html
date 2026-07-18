@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ cve.cve_id }} Details</h1>
+  <div class="panel">
+    <p><strong>Software:</strong> {{ cve.software }}</p>
+    <p><strong>Summary:</strong> {{ cve.summary }}</p>
+    <p><strong>Affected versions:</strong> {{ cve.affected_versions | join(', ') }}</p>
+    <p><strong>Patch guidance:</strong> {{ cve.patch }}</p>
+    <p><strong>Reference:</strong> <a href="{{ cve.link }}" target="_blank" rel="noreferrer">{{ cve.link }}</a></p>
+  </div>
+  <p><a href="{{ url_for('index') }}">Return to the monitoring form</a></p>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Cybersecurity CVE Alert System</h1>
+  <p>Enter the software stack you want the agent to monitor, then start the daily CVE review.</p>
+
+  <div class="panel">
+    <form method="post">
+      <label for="stack_text">Technology stack</label>
+      <textarea id="stack_text" name="stack_text" rows="8">{{ stack_text }}</textarea>
+
+      <div class="grid grid-two" style="margin-top: 1rem;">
+        <div>
+          <label for="severity_threshold">Severity threshold</label>
+          <input type="text" id="severity_threshold" name="severity_threshold" value="{{ severity_threshold }}">
+        </div>
+        <div>
+          <label for="digest_channel">Digest channel</label>
+          <select id="digest_channel" name="digest_channel">
+            <option value="email" {% if digest_channel == 'email' %}selected{% endif %}>Email</option>
+            <option value="slack" {% if digest_channel == 'slack' %}selected{% endif %}>Slack</option>
+          </select>
+        </div>
+      </div>
+
+      <label style="display:block; margin-top: 1rem;">
+        <input type="checkbox" name="internet_exposed" value="true">
+        These systems are exposed to the internet
+      </label>
+
+      <button type="submit" style="margin-top: 1rem;">Start Monitoring</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Ranked CVE Alert List</h1>
+  <div class="panel">
+    <p><span class="pill">Threshold: {{ severity_threshold }}</span><span class="pill">Digest: {{ digest_channel }}</span>{% if exposed_to_internet %}<span class="pill">Internet exposed</span>{% endif %}</p>
+    <p>Monitoring stack:</p>
+    <pre>{{ stack_text }}</pre>
+  </div>
+
+  {% if alerts %}
+    {% for alert in alerts %}
+      <div class="alert-card {{ alert.priority|lower }}">
+        <h3>{{ alert.cve_id }} · {{ alert.software }} {{ alert.installed_version }}</h3>
+        <p><strong>Severity:</strong> {{ alert.severity_score }}/10 · <strong>Priority:</strong> {{ alert.priority }}</p>
+        <p>{{ alert.summary }}</p>
+        <p><strong>Patch priority:</strong> {{ alert.patch_priority }}</p>
+        <p><strong>Patch guidance:</strong> {{ alert.patch }}</p>
+        <p><a href="{{ url_for('cve_detail', cve_id=alert.cve_id) }}">View full CVE details</a></p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="panel">
+      <p>No matching CVEs met the selected threshold. Your stack looks clean for now.</p>
+    </div>
+  {% endif %}
+
+  <p><a href="{{ url_for('index') }}">Back to monitoring setup</a></p>
+{% endblock %}
