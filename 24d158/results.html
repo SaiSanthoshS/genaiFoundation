@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Symptom Navigator — Condition Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot"></span> Step 2 of 4 — Condition Results</div>
+    <h1>Ranked possible conditions</h1>
+    <p class="sub">The agent scored these against your reported symptoms. Likelihood is illustrative, not a diagnosis — always confirm with a healthcare professional.</p>
+  </div>
+
+  <div id="results-container"></div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/agent.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderHeader(1);
+  renderFooter();
+  initResultsPage();
+</script>
+</body>
+</html>

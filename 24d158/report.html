@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Symptom Navigator — Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap">
+  <div class="page-head">
+    <div class="eyebrow"><span class="dot"></span> Step 4 of 4 — Report</div>
+    <h1>Your symptom report</h1>
+    <p class="sub">A printable summary compiled by the agent — bring it to your appointment or save it for your records.</p>
+  </div>
+
+  <div class="report-toolbar no-print">
+    <a class="btn btn-ghost" href="clinics.html">Back to Clinics</a>
+    <button class="btn btn-primary" id="download-btn">
+      Download / Print Report
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3V15M12 15L7 10M12 15L17 10M5 21H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div id="report-container"></div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/agent.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderHeader(3);
+  renderFooter();
+  initReportPage();
+</script>
+</body>
+</html>
