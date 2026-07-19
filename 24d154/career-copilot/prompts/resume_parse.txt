@@ -1,0 +1,48 @@
+Parse the following resume text and extract structured information.
+
+Return a JSON object with these exact keys:
+
+{
+  "skills": ["skill1", "skill2", ...],
+  "education": [
+    {
+      "degree": "...",
+      "field": "...",
+      "institution": "...",
+      "year": "...",
+      "gpa": "..."
+    }
+  ],
+  "experience": [
+    {
+      "title": "...",
+      "company": "...",
+      "duration": "...",
+      "start_date": "...",
+      "end_date": "...",
+      "description": "...",
+      "technologies": ["..."]
+    }
+  ],
+  "projects": [
+    {
+      "name": "...",
+      "description": "...",
+      "technologies": ["..."],
+      "url": "..."
+    }
+  ],
+  "certifications": ["cert1", "cert2", ...],
+  "keywords": ["keyword1", "keyword2", ...],
+  "summary": "A 2-3 sentence professional summary of the candidate."
+}
+
+Rules:
+- Extract ALL skills mentioned (programming languages, frameworks, tools, soft skills)
+- For keywords, extract industry-relevant terms an ATS system would look for
+- If a field is not present in the resume, use an empty string or empty array
+- Do NOT make up information — only extract what is explicitly stated
+- Return ONLY valid JSON, no extra text
+
+Resume Text:
+{{RESUME_TEXT}}
