@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Study Coach</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        font-family: Inter, Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #020617 0%, #111827 100%);
+        color: #f8fafc;
+      }
+      .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+      .card {
+        background: #0f172a;
+        border: 1px solid #1f2937;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.7rem;
+        background: #164e63;
+        color: #a5f3fc;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-top: 0.5rem;
+      }
+      h1, h2 { margin-top: 0; }
+      .row { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      label { display: block; font-size: 0.9rem; margin-bottom: 0.3rem; font-weight: 600; }
+      input, select, button { width: 100%; box-sizing: border-box; padding: 0.72rem; border-radius: 10px; border: 1px solid #334155; font-size: 0.95rem; background: #111827; color: #f8fafc; }
+      button { cursor: pointer; background: linear-gradient(135deg, #2563eb, #4f46e5); color: white; border: none; font-weight: 600; }
+      button.secondary { background: #0f766e; }
+      .pill { display: inline-block; padding: 0.3rem 0.6rem; border-radius: 999px; background: #1e293b; color: #bae6fd; font-size: 0.8rem; margin-right: 0.3rem; }
+      .timeline { display: grid; gap: 0.6rem; }
+      .timeline button { text-align: left; background: #111827; color: #f8fafc; border: 1px solid #334155; }
+      .timeline button.done { background: #14532d; border-color: #22c55e; }
+      .quiz-options label { display: block; padding: 0.55rem 0.7rem; background: #111827; border-radius: 10px; margin-bottom: 0.45rem; border: 1px solid #334155; }
+      .stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+      .stat { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 0.8rem 1rem; min-width: 120px; }
+      .muted { color: #94a3b8; }
+      .feedback { margin-top: 0.7rem; font-weight: 600; }
+      .concept-list { display: grid; gap: 0.65rem; }
+      .concept-item { padding: 0.75rem; border-radius: 10px; background: #111827; border: 1px solid #334155; }
+      .progress-bar { height: 8px; background: #1f2937; border-radius: 999px; overflow: hidden; margin-top: 0.4rem; }
+      .progress-bar > div { height: 100%; background: linear-gradient(90deg, #2563eb, #8b5cf6); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Smart Study Coach</h1>
+      <p class="muted">Build a study plan, review the timeline, answer quiz questions, and track mastery as you go.</p>
+
+      <div class="card">
+        <h2>Create a plan</h2>
+        <div class="row">
+          <div><label>Subject</label><select id="subject">
+            <option value="Python">Python</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Statistics">Statistics</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="History">History</option>
+            <option value="Biology">Biology</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Literature">Literature</option>
+            <option value="Economics">Economics</option>
+          </select></div>
+          <div><label>Difficulty</label><select id="difficulty"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select></div>
+          <div><label>Exam date</label><input id="exam_date" type="date" /></div>
+          <div><label>User</label><input id="user_id" value="demo-user" /></div>
+        </div>
+        <button onclick="buildPlan()">Build My Plan</button>
+      </div>
+
+      <div class="card">
+        <h2>Plan summary</h2>
+        <div id="planSummary" class="muted">No plan yet — create one to get started.</div>
+      </div>
+
+      <div class="card">
+        <h2>Revision timeline</h2>
+        <div id="timelineArea" class="timeline"></div>
+      </div>
+
+      <div class="card">
+        <h2>Practice quiz</h2>
+        <div id="quizArea" class="muted">Select a timeline item to load the next quiz.</div>
+      </div>
+
+      <div class="card">
+        <h2>Progress dashboard</h2>
+        <div id="dashboardArea" class="muted">Dashboard will appear after the plan is built.</div>
+      </div>
+    </div>
+
+    <script>
+      let currentPlan = null;
+      let currentQuiz = null;
+      let currentConceptId = null;
+
+      function bindFormChanges() {
+        document.getElementById('subject').addEventListener('change', () => {
+          if (currentPlan) {
+            buildPlan();
+          }
+        });
+        document.getElementById('difficulty').addEventListener('change', () => {
+          if (currentPlan) {
+            buildPlan();
+          }
+        });
+      }
+
+      async function buildPlan() {
+        const payload = {
+          subject: document.getElementById('subject').value,
+          difficulty: document.getElementById('difficulty').value,
+          exam_date: document.getElementById('exam_date').value || null,
+          user_id: document.getElementById('user_id').value,
+        };
+
+        const response = await fetch('/plans', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        currentPlan = data;
+        renderPlanSummary(data);
+        renderTimeline(data.timeline || []);
+        if (data.timeline && data.timeline.length) {
+          await loadConcept(data.timeline[0].concept_id);
+        }
+        await loadDashboard(payload.user_id);
+      }
+
+      function renderPlanSummary(data) {
+        const summary = document.getElementById('planSummary');
+        summary.innerHTML = `
+          <div class="stats">
+            <div class="stat"><strong>${data.subject}</strong><div class="muted">Subject</div></div>
+            <div class="stat"><strong>${data.difficulty}</strong><div class="muted">Difficulty</div></div>
+            <div class="stat"><strong>${data.exam_date}</strong><div class="muted">Exam date</div></div>
+            <div class="stat"><strong>${(data.timeline || []).length}</strong><div class="muted">Review sessions</div></div>
+          </div>
+          <div style="margin-top: 0.8rem;">
+            <span class="pill">Plan ID: ${data.plan_id}</span>
+            <span class="pill">Status: ${data.status}</span>
+            <span class="status-badge">Generation: ${data.generation_mode || 'fallback'}</span>
+          </div>
+          <div class="concept-list" style="margin-top: 0.8rem;">
+            ${(data.concepts || []).map((concept) => `
+              <div class="concept-item">
+                <strong>${concept.title}</strong>
+                <div class="muted">${concept.summary}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      function renderTimeline(timeline) {
+        const container = document.getElementById('timelineArea');
+        if (!timeline.length) {
+          container.innerHTML = '<div class="muted">No timeline items yet.</div>';
+          return;
+        }
+
+        container.innerHTML = timeline.map((session) => `
+          <button class="${session.status === 'done' ? 'done' : ''}" onclick="loadConcept('${session.concept_id}')">
+            <strong>${session.scheduled_date}</strong> — ${session.concept_id} <br/>
+            <span class="muted">Status: ${session.status} • Interval: ${session.interval_days} day(s)</span>
+          </button>
+        `).join('');
+      }
+
+      async function loadConcept(conceptId) {
+        currentConceptId = conceptId;
+        const response = await fetch(`/quiz/${conceptId}`);
+        const data = await response.json();
+        currentQuiz = data;
+        renderQuiz(data);
+      }
+
+      function renderQuiz(data) {
+        const container = document.getElementById('quizArea');
+        const question = data.quiz.questions[0];
+        const options = question.options.map((option) => `
+          <label><input type="radio" name="answer" value="${option}" /> ${option}</label>
+        `).join('');
+
+        container.innerHTML = `
+          <div style="margin-bottom: 0.7rem;"><strong>${question.prompt}</strong></div>
+          <div class="quiz-options">${options}</div>
+          <div class="muted" style="margin-top:0.6rem;">Concept: ${data.concept.title}</div>
+          <button style="margin-top:0.8rem;" onclick="submitQuiz()">Submit Answer</button>
+        `;
+      }
+
+      async function submitQuiz() {
+        if (!currentQuiz) return;
+        const selected = document.querySelector('input[name="answer"]:checked')?.value;
+        const response = await fetch(`/quiz/${currentQuiz.quiz.id}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers: [selected] }),
+        });
+        const result = await response.json();
+        document.getElementById('quizArea').insertAdjacentHTML('beforeend', `
+          <div class="feedback">${result.feedback}</div>
+          <div class="muted">Score: ${result.score}/${result.total} • Mastery: ${result.concept_mastery}</div>
+        `);
+        await loadDashboard(document.getElementById('user_id').value);
+      }
+
+      async function loadDashboard(userId) {
+        const response = await fetch(`/dashboard/${userId}`);
+        const data = await response.json();
+        const container = document.getElementById('dashboardArea');
+        const concepts = (data.concepts || []).map((concept) => `
+          <div class="concept-item">
+            <strong>${concept.title}</strong>
+            <div class="muted">Mastery ${(concept.mastery * 100).toFixed(0)}%</div>
+            <div class="progress-bar"><div style="width: ${(concept.mastery * 100).toFixed(0)}%"></div></div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <div class="stats">
+            <div class="stat"><strong>${data.streak}</strong><div class="muted">Streak</div></div>
+            <div class="stat"><strong>${(data.mastery * 100).toFixed(0)}%</strong><div class="muted">Overall mastery</div></div>
+            <div class="stat"><strong>${(data.completion * 100).toFixed(0)}%</strong><div class="muted">Completion</div></div>
+          </div>
+          <div class="concept-list" style="margin-top:0.8rem;">${concepts}</div>
+        `;
+      }
+      bindFormChanges();
+    </script>
+  </body>
+</html>
