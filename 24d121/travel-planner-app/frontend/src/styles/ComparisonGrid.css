@@ -1,0 +1,196 @@
+/* Comparison Grid Styles */
+.comparison-grid-container {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.comparison-grid-container h2 {
+  color: var(--neutral-900);
+  font-size: 2em;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.comparison-grid-container .subtitle {
+  color: var(--neutral-500);
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 0.95em;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.destination-card {
+  border: 2px solid var(--neutral-200);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  transition: all 0.3s ease;
+  animation: slideIn 0.5s ease-out;
+  background: var(--neutral-50);
+}
+
+.destination-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+}
+
+.rank-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9em;
+}
+
+.destination-card h3 {
+  color: var(--neutral-900);
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.card-section {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.card-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.card-section h4 {
+  color: var(--neutral-700);
+  font-size: 0.9em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.card-section p {
+  color: var(--neutral-600);
+  margin-bottom: 4px;
+}
+
+.text-small {
+  font-size: 0.85em;
+  color: var(--neutral-500);
+}
+
+.vibes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vibe-tag {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.weather-info {
+  font-size: 0.95em;
+  color: var(--neutral-700);
+}
+
+.cost-summary {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(124, 58, 237, 0.05));
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--neutral-200);
+  margin-bottom: 16px;
+}
+
+.total-cost {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.flight-routes {
+  margin: 16px 0;
+  padding: 12px;
+  background: var(--neutral-100);
+  border-radius: 8px;
+}
+
+.flight-routes h4 {
+  margin-bottom: 8px;
+}
+
+.flight-route {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.9em;
+  color: var(--neutral-600);
+}
+
+.select-button {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 16px;
+}
+
+.select-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+}
+
+.select-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.comparison-note {
+  background: var(--neutral-100);
+  padding: 16px;
+  border-radius: 8px;
+  color: var(--neutral-700);
+  text-align: center;
+  font-size: 0.9em;
+  border-left: 4px solid var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-card {
+    margin-bottom: 10px;
+  }
+}

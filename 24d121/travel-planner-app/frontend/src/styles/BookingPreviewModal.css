@@ -1,0 +1,270 @@
+/* Booking Preview Modal Styles */
+.booking-preview-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.booking-preview-modal h2 {
+  color: var(--neutral-900);
+  font-size: 2em;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.modal-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.booking-section {
+  background: var(--neutral-50);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--neutral-200);
+}
+
+.booking-section h3 {
+  color: var(--neutral-900);
+  font-size: 1.2em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.booking-link {
+  display: inline-block;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.booking-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+}
+
+.trip-summary {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.trip-summary h3 {
+  font-size: 1.2em;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item.highlight {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 1.05em;
+}
+
+.pitch-section {
+  background: var(--neutral-50);
+  padding: 24px;
+  border-radius: 12px;
+  border: 2px dashed var(--primary-color);
+  grid-column: 1 / -1;
+}
+
+.pitch-section h3 {
+  color: var(--neutral-900);
+  font-size: 1.2em;
+  margin-bottom: 16px;
+}
+
+.generate-button {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.generate-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+}
+
+.generate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.email-preview {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.email-content {
+  background: var(--neutral-100);
+  padding: 16px;
+  border-radius: 8px;
+  line-height: 1.6;
+  color: var(--neutral-700);
+  font-size: 0.95em;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.email-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.copy-button {
+  padding: 12px 24px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.email-tips {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(124, 58, 237, 0.05));
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.email-tips p {
+  color: var(--neutral-900);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.email-tips ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.email-tips li {
+  color: var(--neutral-700);
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 6px;
+  font-size: 0.9em;
+}
+
+.email-tips li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.reset-button,
+.export-button {
+  padding: 14px 28px;
+  border: 2px solid var(--neutral-300);
+  background: white;
+  color: var(--neutral-900);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.reset-button:hover,
+.export-button:hover {
+  background: var(--neutral-100);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .booking-preview-modal {
+    padding: 24px;
+  }
+
+  .modal-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pitch-section {
+    grid-column: 1;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .reset-button,
+  .export-button {
+    width: 100%;
+  }
+}

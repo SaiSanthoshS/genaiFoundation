@@ -1,3 +1,0 @@
-Smart Meeting Scheduler
-Agent: When user submits participant emails and a desired meeting duration, the agent fetches each person's calendar availability, converts across time zones, finds overlapping free slots, ranks the top three options by convenience, and sends calendar invites to all participants.
-Frontend: Participant Input Form — email list, duration, and timezone; "Find Slots" triggers the agent | Availability Grid — visual overlap matrix built by the agent showing who is free when | Slot Selector — top three agent-recommended times shown with local time per participant | Invite Preview Modal — user reviews the agent-composed invite and clicks "Send" to dispatch

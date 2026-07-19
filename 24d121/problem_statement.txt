@@ -1,3 +1,7 @@
-Smart Meeting Scheduler
-Agent: When user submits participant emails and a desired meeting duration, the agent fetches each person's calendar availability, converts across time zones, finds overlapping free slots, ranks the top three options by convenience, and sends calendar invites to all participants.
-Frontend: Participant Input Form — email list, duration, and timezone; "Find Slots" triggers the agent | Availability Grid — visual overlap matrix built by the agent showing who is free when | Slot Selector — top three agent-recommended times shown with local time per participant | Invite Preview Modal — user reviews the agent-composed invite and clicks "Send" to dispatch
+1. Collaborative Travel & Itinerary Planner
+The Agent: Accepts a list of travelers, their departure cities, budget constraints, and trip duration. It fetches flight schedules, aggregates hotel/Airbnb availability, calculates optimal central destinations (minimizing total travel time/cost), and ranks the top three custom itineraries.
+The Frontend:
+Input Form: Friend group email list, budget ceiling, travel window, and preferred vibes (e.g., beach, city).
+Comparison Grid: A visual matrix showing flight costs, travel durations, and weather overlaps for 3 potential cities.
+Itinerary Selector: The top 3 agent-generated trip options with a day-by-day high-level breakdown.
+Booking Preview Modal: A confirmation screen showing the aggregated booking links and an agent-drafted "Trip Pitch" email to send to the group.
