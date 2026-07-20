@@ -1,0 +1,18 @@
+{
+  "name": "earthquake-notifier",
+  "version": "1.0.0",
+  "description": "**QuakeWatch** is a premium, real-time Earthquake Early Warning Notifier built as a lightweight Single Page Application (SPA). Its primary goal is to monitor global seismic activity and calculate how strongly you might feel an earthquake based on your specific location.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "sqlite3": "^6.0.1"
+  }
+}
