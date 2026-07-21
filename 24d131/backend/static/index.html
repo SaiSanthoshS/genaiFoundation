@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Monitor Agent</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+      .container { max-width: 960px; margin: 0 auto; padding: 32px 20px 48px; }
+      .card { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+      textarea, input, button { font: inherit; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; margin-top: 8px; }
+      button { background: #2563eb; color: white; cursor: pointer; border: none; }
+      button:hover { background: #1d4ed8; }
+      pre { white-space: pre-wrap; background: #020617; padding: 12px; border-radius: 8px; overflow-x: auto; }
+      .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0 4px; }
+      .toggle-row label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+      .toggle-row input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }
+      .hint { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Stock Portfolio Monitor & Advisor</h1>
+      <p>Enter holdings like “AAPL 10 @ 200, TSLA 5 @ 250” and the agent will analyze them.</p>
+
+      <div class="card">
+        <label for="holdings">Holdings</label>
+        <textarea id="holdings" rows="6" placeholder="AAPL 10 @ 200, TSLA 5 @ 250"></textarea>
+        <label for="threshold">Loss threshold (%)</label>
+        <input id="threshold" type="number" value="5" step="0.5" />
+        <div class="toggle-row">
+          <label for="useAi">
+            <input id="useAi" type="checkbox" />
+            Use AI sentiment scoring (more accurate, higher cost)
+          </label>
+        </div>
+        <div class="hint">Default is off to keep credits low.</div>
+        <button id="analyzeBtn">Start Monitoring</button>
+      </div>
+
+      <div class="card">
+        <h2>Analysis</h2>
+        <pre id="result">Waiting for analysis…</pre>
+      </div>
+    </div>
+
+    <script>
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      const result = document.getElementById('result');
+
+      analyzeBtn.addEventListener('click', async () => {
+        const holdings = document.getElementById('holdings').value.trim();
+        const threshold = document.getElementById('threshold').value;
+        const useAi = document.getElementById('useAi').checked;
+        result.textContent = 'Analyzing portfolio…';
+
+        try {
+          const response = await fetch('/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: holdings, threshold_pct: Number(threshold) || 5, use_ai: useAi })
+          });
+
+          const data = await response.json();
+          result.textContent = data.summary || JSON.stringify(data, null, 2);
+        } catch (error) {
+          result.textContent = 'Request failed: ' + error.message;
+        }
+      });
+    </script>
+  </body>
+</html>
