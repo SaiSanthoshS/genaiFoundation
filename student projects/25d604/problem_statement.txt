@@ -1,0 +1,3 @@
+Book Club Recommendation Engine
+Agent: When each member rates their past reads, the agent fetches book themes and metadata, aggregates preferences across the group, finds books that satisfy the majority's overlapping interests, and builds a reading schedule with daily page targets for each selected book.
+Frontend: Member Setup Page — add members and import reading history; "Find Our Next Book" triggers the agent | Group Preference Venn Diagram — agent-built overlap visualisation by theme | Recommended Books Grid — agent-selected titles with cover, theme tags, and group match percentage | Reading Schedule Calendar — agent-generated page milestones mapped to dates for the chosen book

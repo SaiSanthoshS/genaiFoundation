@@ -1,0 +1,3 @@
+Startup Funding Intelligence Agent
+Agent: When user inputs their startup's domain and stage, the agent fetches funding history from public records, pulls recent investor news, analyses investor portfolios for fit with the startup's sector, scores match quality for each potential investor, and composes a weekly funding opportunity digest.
+Frontend: Startup Profile Input — name, sector, stage, and revenue range; "Analyse" triggers the agent | Funding Timeline View — agent-fetched funding rounds shown chronologically | Investor Match Table — agent-scored investors with fit score, portfolio companies, and contact link | Weekly Digest Page — agent-composed email preview; user clicks "Subscribe" to receive it

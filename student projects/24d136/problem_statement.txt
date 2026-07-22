@@ -1,0 +1,3 @@
+Smart Travel Planner
+Agent: When user submits destination and travel dates, the agent autonomously fetches the weather forecast, searches and ranks available flights by price and duration, discovers top-rated attractions and hotels, converts all costs to the user's currency, and compiles a complete day-by-day itinerary.
+Frontend: Trip Planner Form — user enters destination, dates, and budget then clicks "Plan My Trip" to trigger the agent | Itinerary Dashboard — displays the agent-generated day-by-day plan with a map of pinned places, weather cards per day, and a cost breakdown chart | Email Preview Modal — user reviews the agent-compiled itinerary and sends it to their inbox

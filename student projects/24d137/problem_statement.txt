@@ -1,0 +1,3 @@
+E-Commerce Price Comparator
+Agent: When user searches a product, the agent queries multiple shopping platforms, tracks price history for each result, finds active coupons, estimates total cost including shipping per store, and alerts the user when the price drops below a set threshold.
+Frontend: Product Search Bar — submitting triggers the agent | Price Comparison Table — agent-fetched results per store showing price, rating, shipping, and total | Price History Chart — agent-tracked multi-line chart per store over 90 days | Saved Products Page — watchlist managed by the agent with price drop badges when thresholds are hit

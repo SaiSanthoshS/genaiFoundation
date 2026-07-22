@@ -1,0 +1,3 @@
+Personal Finance Goal Tracker
+Agent: When user imports their bank statement, the agent parses transactions, classifies each by spending category, calculates monthly surplus, projects when each savings goal will be reached, and suggests a revised savings rate if the projection misses the deadline.
+Frontend: Bank CSV Upload Page — drag-and-drop import; upload triggers the agent | Spending Breakdown Dashboard — agent-categorised donut chart with monthly trend lines | Goals Page — each goal shown as a progress bar with the agent-projected completion date | Scenario Planner — savings rate slider triggers the agent to recalculate and redisplay the projection chart | Monthly Report — agent-compiled PDF of income, expenses, and goal progress

@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scholar's Archive — Research Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/citation-js@0.7.14/build/citation.min.js"></script>
+
+<style>
+  :root {
+    /* Color Palette from Demo 2 (Archival) & Demo 3 (Modern) */
+    --paper-bg: #E5E4E2;
+    --card-bg: #FDFDFB;
+    --ink: #1B263B;
+    --ink-soft: #545e76;
+    --ink-navy: #051125;
+    --line: rgba(27, 38, 59, 0.15);
+    --line-strong: rgba(27, 38, 59, 0.3);
+    
+    --amber: #b18456;
+    --amber-bg: #ffdcbd;
+    --moss: #586330;
+    --moss-bg: #dbe9a9;
+    --rust: #ba1a1a;
+    --rust-bg: #ffdad6;
+
+    --ai-accent: #005bbf;
+    --ai-accent-bg: #d8e2ff;
+
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  
+  body {
+    background-color: var(--paper-bg);
+    /* Subtle dot grid + grain */
+    background-image: radial-gradient(circle at 1px 1px, rgba(27,38,59,0.06) 1px, transparent 0), url("https://www.transparenttextures.com/patterns/stardust.png");
+    background-size: 22px 22px, auto;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  #app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+  }
+
+  /* ---------- Header / Drawer Front ---------- */
+  .drawer {
+    margin-top: 40px;
+    background: var(--ink-navy);
+    border-radius: 12px 12px 0 0;
+    padding: 24px 32px 0;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .drawer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .drawer-plate {
+    display: flex; 
+    align-items: baseline; 
+    justify-content: space-between; 
+    flex-wrap: wrap; 
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 20px;
+    position: relative;
+  }
+
+  .drawer-title {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 28px;
+    color: #FDFDFB;
+    letter-spacing: -0.02em;
+  }
+
+  .drawer-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #828da7;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding-top: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: relative;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #828da7;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    padding: 10px 20px 12px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+  }
+
+  .tab:hover { 
+    background: rgba(255,255,255,0.08); 
+    color: #fff; 
+  }
+
+  .tab.active {
+    background: var(--card-bg);
+    color: var(--ink-navy);
+    font-weight: 600;
+    border-color: var(--card-bg);
+    clip-path: polygon(3% 0%, 97% 0%, 100% 100%, 0% 100%);
+  }
+
+  .tab .n { opacity: 0.5; margin-right: 8px; font-weight: 400; }
+
+  main {
+    background: var(--card-bg);
+    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+    border-radius: 0 0 12px 12px;
+    padding: 40px;
+    box-shadow: var(--shadow-soft);
+    min-height: 500px;
+    border: 1px solid var(--ink-navy);
+    border-top: none;
+    position: relative;
+    transition: opacity 0.3s ease;
+  }
+
+  h2.section-title {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 26px;
+    margin: 0 0 8px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  p.section-sub {
+    margin: 0 0 32px;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  /* ---------- Search view ---------- */
+  .field-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+  .field { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 220px; }
+  .field.small { flex: 0 0 130px; min-width: 130px; }
+  
+  label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  input[type=text], input[type=number], select {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    padding: 12px 16px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  
+  input[type=text]::placeholder {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    color: #8fa0b5;
+  }
+
+  input:focus, select:focus { 
+    border-color: var(--ink-navy); 
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(5, 17, 37, 0.08); 
+  }
+
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    background: var(--ink-navy);
+    color: #FDFDFB;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 24px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn:hover { 
+    background: #1b263b; 
+    box-shadow: 0 4px 12px rgba(5,17,37,0.2);
+  }
+  
+  .btn:active { transform: translateY(1px); box-shadow: none; }
+  
+  .btn.ghost {
+    background: transparent;
+    color: var(--ink-navy);
+    border: 1px solid var(--line-strong);
+    box-shadow: none;
+  }
+  
+  .btn.ghost:hover { background: rgba(5,17,37,0.04); }
+  
+  .btn.small { padding: 8px 14px; font-size: 11px; }
+
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: rgba(88, 99, 48, 0.08);
+    color: var(--moss);
+    border: 1px solid rgba(88, 99, 48, 0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .chip:hover { background: var(--moss-bg); border-color: var(--moss); }
+
+  .hint-block {
+    margin-top: 40px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.4);
+    border: 1px dashed var(--line-strong);
+    border-radius: 8px;
+  }
+
+  /* ---------- Discovery board ---------- */
+  .gap-panel {
+    background: linear-gradient(135deg, var(--ai-accent-bg) 0%, rgba(255,255,255,0.8) 100%);
+    border: 1px solid rgba(0, 91, 191, 0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .gap-panel::after {
+    content: 'auto_awesome';
+    font-family: 'Material Symbols Outlined';
+    position: absolute;
+    right: -10px;
+    bottom: -20px;
+    font-size: 100px;
+    color: var(--ai-accent);
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .gap-panel .gap-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ai-accent);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  .gap-panel p {
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.6;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .board-toolbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px; 
+    flex-wrap: wrap; 
+    gap: 12px;
+  }
+  
+  .board-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .card-grid { display: flex; flex-direction: column; gap: 16px; }
+  
+  .paper-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    transition: all 0.2s ease;
+    overflow: hidden;
+  }
+  
+  .paper-card:hover { 
+    border-color: var(--ink-navy); 
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(5,17,37,0.03) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(50%, -50%) scale(1);
+    transition: transform 0.4s ease;
+  }
+  
+  .paper-card:hover::before { transform: translate(50%, -50%) scale(1.5); }
+
+  .rank-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 60px;
+    padding-top: 4px;
+  }
+  
+  .rank-num {
+    font-family: 'Newsreader', serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink-navy);
+    line-height: 1;
+    font-style: italic;
+  }
+  
+  .rank-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+  }
+
+  .card-body { flex: 1; min-width: 0; z-index: 1; }
+  
+  .card-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+  
+  .paper-title {
+    font-family: 'Newsreader', serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+  
+  .paper-card:hover .paper-title { color: var(--ai-accent); }
+  
+  .paper-meta { 
+    font-family: 'IBM Plex Mono', monospace; 
+    font-size: 11.5px; 
+    color: var(--ink-soft); 
+  }
+  
+  .contribution { 
+    font-size: 14px; 
+    color: var(--ink-soft); 
+    margin: 12px 0 16px; 
+    line-height: 1.6;
+    padding-left: 12px;
+    border-left: 2px solid var(--line-strong);
+  }
+  
+  .card-tags { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--paper-bg);
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  .tag.domain { background: var(--moss-bg); color: var(--moss); }
+
+  .save-star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--line-strong);
+    transition: all 0.2s ease;
+  }
+  
+  .save-star:hover { background: var(--paper-bg); color: var(--ink); }
+  .save-star.saved { color: var(--amber); }
+  .save-star.saved:hover { background: var(--amber-bg); }
+
+  .stamp {
+    flex: 0 0 auto;
+    width: 64px; height: 64px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid var(--line-strong);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    z-index: 1;
+  }
+  
+  .stamp .pct { font-size: 18px; font-weight: 600; line-height: 1; color: var(--ink-navy); }
+  .stamp .lbl { font-size: 8px; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 4px; color: var(--ink-soft); }
+
+  /* ---------- Detail view ---------- */
+  .detail-head { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .detail-title { font-family: 'Newsreader', serif; font-size: 32px; font-weight: 500; margin: 0 0 12px; line-height: 1.2; letter-spacing: -0.01em;}
+  .detail-meta { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-soft); display: flex; align-items: center; flex-wrap: wrap; gap: 8px;}
+  
+  .detail-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; margin-top: 24px; }
+  @media(max-width:860px){ .detail-grid { grid-template-columns: 1fr; } }
+  
+  .block-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  
+  .abstract { 
+    font-size: 15px; 
+    line-height: 1.7; 
+    color: var(--ink); 
+    margin-bottom: 32px;
+    background: rgba(255,255,255,0.5);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  
+  ul.contrib-list { margin: 0 0 32px; padding-left: 20px; }
+  ul.contrib-list li { font-size: 14.5px; line-height: 1.6; margin-bottom: 10px; color: var(--ink); padding-left: 4px;}
+  ul.contrib-list li::marker { color: var(--moss); }
+
+  .related-list { display: flex; flex-direction: column; gap: 10px; }
+  .related-item {
+    display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+    padding: 12px 16px; background: #fff; border-radius: 8px; cursor: pointer; border: 1px solid var(--line);
+    transition: all 0.2s ease;
+  }
+  .related-item:hover { border-color: var(--ink-navy); transform: translateX(2px); box-shadow: var(--shadow-soft);}
+  .related-item .rt { font-size: 13.5px; color: var(--ink); font-weight: 500;}
+  .related-item .ry { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-soft); white-space: nowrap;}
+  
+  svg.graph { width: 100%; height: auto; margin-bottom: 16px; background: #fff; border-radius: 8px; border: 1px solid var(--line); padding: 20px;}
+  .graph text { font-family: 'Inter', sans-serif; }
+  .graph .node-center { fill: var(--ink-navy); }
+  .graph .node-rel { fill: #fff; stroke: var(--moss); stroke-width: 2; cursor: pointer; transition: all 0.2s;}
+  .graph .node-rel:hover { fill: var(--moss-bg); stroke-width: 3;}
+  .graph .edge { stroke: var(--line-strong); stroke-width: 1.5; stroke-dasharray: 4; }
+  .graph .center-label { fill: #fff; font-size: 10px; font-weight: 500; }
+  .graph .rel-label { fill: var(--ink); font-size: 9px; }
+
+  .empty-state {
+    text-align: center; padding: 80px 20px; color: var(--ink-soft);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .empty-state .icon { font-size: 48px; color: var(--line-strong); margin-bottom: 16px; font-variation-settings: 'wght' 200;}
+  .empty-state .big { font-family: 'Newsreader', serif; font-style: italic; font-size: 24px; color: var(--ink); margin-bottom: 12px;}
+
+  /* ---------- Bibliography ---------- */
+  .format-row { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; align-items: center; background: rgba(255,255,255,0.5); padding: 16px; border-radius: 8px; border: 1px solid var(--line);}
+  
+  .format-btn {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding: 8px 16px; border-radius: 6px;
+    border: 1px solid transparent; background: transparent; cursor: pointer; color: var(--ink-soft);
+    transition: all 0.2s ease; font-weight: 500;
+  }
+  
+  .format-btn:hover { background: rgba(255,255,255,0.8); border-color: var(--line-strong); }
+  .format-btn.active { background: #fff; color: var(--ink-navy); border-color: var(--ink-navy); box-shadow: var(--shadow-soft); font-weight: 600;}
+  
+  .biblio-entry {
+    display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+    transition: background 0.2s ease;
+  }
+  
+  .biblio-entry:hover { background: rgba(255,255,255,0.4); }
+  
+  .biblio-text { font-size: 14.5px; line-height: 1.6; color: var(--ink); flex: 1;}
+  .biblio-text .bkey { color: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; font-size: 11px; margin-right: 12px; opacity: 0.7;}
+  .biblio-actions { display: flex; gap: 8px; flex: 0 0 auto; opacity: 0; transition: opacity 0.2s ease; }
+  .biblio-entry:hover .biblio-actions { opacity: 1; }
+  
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink-navy); color: #FDFDFB; padding: 12px 24px; border-radius: 8px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500;
+    opacity: 0; pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 50;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer.note {
+    text-align: center; color: var(--ink-soft); font-size: 11px; margin-top: 24px;
+    font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px;
+    opacity: 0.7;
+  }
+
+  /* Fade animation for view switching */
+  .fade-in { animation: fadeIn 0.3s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="drawer">
+    <div class="drawer-plate">
+      <div>
+        <div class="drawer-title">Scholar's Archive</div>
+        <div class="drawer-sub" style="margin-top:4px;">Academic Research Assistant</div>
+      </div>
+      <div class="drawer-sub" style="opacity:0.7;">Form ID: 1954-RQ · Stack-04</div>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+  
+  <main id="view-root" class="fade-in"></main>
+  
+  <footer class="note">
+    Prototype Environment — Engine loaded with 28 curated papers simulating AI synthesis and ranking.
+  </footer>
+</div>
+
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+/* ============================= DATA ============================= */
+const GAP_NOTES = {
+  "Computer Science": "Most evaluation work in this set concentrates on English-language benchmarks published 2020–2023. Only one paper addresses multilingual evaluation, and none examine low-resource languages directly — a clear gap for future work.",
+  "Environmental Science": "Cost–benefit evidence is dominated by short-term studies spanning one to three years. Only a single 2024 paper tracks outcomes over a decade, leaving long-term durability and maintenance costs largely unexamined.",
+  "Medicine": "Rural broadband as a barrier to adoption is covered by just one 2023 study. The bulk of research centers on urban and suburban populations, leaving rural access mechanisms comparatively under-studied.",
+  "Psychology": "Shift-worker populations appear in only two recent, small-sample studies. Most evidence on sleep and cognition still comes from participants on standard daytime schedules."
+};
+
+const PAPERS = [
+  // ---- Computer Science ----
+  {id:'cs1', domain:'Computer Science', title:'Benchmarking Factual Consistency in Large Language Models', authors:['A. Okafor','M. Lindqvist'], year:2021, venue:'Proc. of Empirical Methods in NLP', citations:412,
+   abstract:'We introduce a benchmark suite for measuring factual consistency across generation tasks in large language models. Across twelve model families, we find consistency scores vary more with prompt phrasing than with model scale, challenging assumptions that scale alone resolves factuality.',
+   contributions:['Releases a 4,200-item factual consistency benchmark spanning six domains.','Shows prompt phrasing shifts consistency scores by up to 18 points, more than model scale.'],
+   keywords:['large language models','llm evaluation','factual consistency','benchmark'], related:['cs2','cs5','cs6']},
+  {id:'cs2', domain:'Computer Science', title:'Hallucination Detection via Retrieval-Augmented Verification', authors:['R. Salazar','T. Kobayashi'], year:2022, venue:'Trans. of the Association for Computational Linguistics', citations:358,
+   abstract:'This paper proposes a lightweight verification layer that cross-checks generated claims against retrieved passages in real time. The method reduces unsupported claims by 34% on open-domain question answering without materially increasing latency.',
+   contributions:['Introduces a retrieval-verification layer deployable at inference time.','Cuts unsupported claims by 34% on open-domain QA benchmarks.'],
+   keywords:['hallucination','retrieval augmented generation','llm evaluation','verification'], related:['cs1','cs3','cs7']},
+  {id:'cs3', domain:'Computer Science', title:'Prompt Sensitivity and the Illusion of Reasoning in LLMs', authors:['H. Zeng','D. Marchetti'], year:2023, venue:'Advances in Neural Information Processing Systems', citations:601,
+   abstract:'By systematically perturbing chain-of-thought prompts, we show that apparent multi-step reasoning in large language models is often brittle surface pattern-matching rather than robust inference. Minor rewordings flip final answers in over 40% of cases tested.',
+   contributions:['Demonstrates 40%+ answer flips under minor chain-of-thought prompt perturbation.','Proposes a stability metric for distinguishing genuine from superficial reasoning.'],
+   keywords:['large language models','reasoning','chain of thought','prompting','llm evaluation'], related:['cs1','cs4','cs6']},
+  {id:'cs4', domain:'Computer Science', title:'Multilingual Evaluation Gaps in Instruction-Tuned Models', authors:['N. Fadiga','S. Park'], year:2023, venue:'Computational Linguistics', citations:89,
+   abstract:'We audit thirty widely cited LLM benchmarks and find fewer than 10% include non-English test sets, and almost none cover low-resource languages. Performance drops of 20–45 points appear when English-tuned models are evaluated in underrepresented languages.',
+   contributions:['Audits 30 benchmarks and quantifies their English-language skew.','Reports 20–45 point performance drops on low-resource language evaluation.'],
+   keywords:['multilingual','llm evaluation','low-resource languages','benchmark'], related:['cs3','cs7']},
+  {id:'cs5', domain:'Computer Science', title:'Interpretability Through Attention Attribution: A Reassessment', authors:['L. Bouchard','K. Osei'], year:2020, venue:'International Conference on Machine Learning', citations:723,
+   abstract:'Revisiting attention weights as an explanation tool, we show attribution maps are frequently unstable under equivalent model reparameterizations, questioning their use as faithful explanations of model behavior.',
+   contributions:['Shows attention-based attribution is unstable under reparameterization.','Proposes stability testing as a prerequisite for interpretability claims.'],
+   keywords:['interpretability','attention','explainability','large language models'], related:['cs1','cs6']},
+  {id:'cs6', domain:'Computer Science', title:'Human Preference Alignment: Reward Hacking in RLHF Pipelines', authors:['J. Voss','P. Anand'], year:2022, venue:'Proc. of ACM FAccT', citations:276,
+   abstract:'We document systematic reward hacking behaviors in reinforcement learning from human feedback pipelines, where models learn to exploit annotator heuristics rather than genuine quality signals, and propose a mitigation via adversarial reward auditing.',
+   contributions:['Catalogs five recurring reward-hacking patterns in RLHF-trained models.','Introduces adversarial reward auditing as a mitigation strategy.'],
+   keywords:['rlhf','alignment','reward hacking','large language models'], related:['cs1','cs3','cs5']},
+  {id:'cs7', domain:'Computer Science', title:'Long-Context Retrieval: Do Models Actually Use What They Read?', authors:['C. Renner','A. Osei'], year:2024, venue:'Association for Computational Linguistics', citations:47,
+   abstract:'Using needle-in-a-haystack probes across context windows up to 200K tokens, we find retrieval accuracy degrades sharply for information placed in the middle of long contexts, regardless of stated context length support.',
+   contributions:['Identifies a consistent "lost in the middle" degradation pattern in long-context models.','Provides an open probe suite for long-context retrieval testing.'],
+   keywords:['long context','retrieval','large language models','llm evaluation'], related:['cs2','cs4']},
+
+  // ---- Environmental Science ----
+  {id:'env1', domain:'Environmental Science', title:'Green Roof Performance in Temperate Climates: A Meta-Analysis', authors:['E. Sørensen','M. Villanueva'], year:2019, venue:'Urban Climate', citations:289,
+   abstract:'Synthesizing 47 field studies, we find extensive green roofs reduce peak summer surface temperatures by an average of 11°C relative to conventional roofing, with substantial variation driven by substrate depth and vegetation type.',
+   contributions:['Synthesizes 47 studies into a single effect-size estimate for green roof cooling.','Identifies substrate depth as the strongest moderator of cooling performance.'],
+   keywords:['urban heat island','green roofs','cooling','climate mitigation'], related:['env2','env3','env4']},
+  {id:'env2', domain:'Environmental Science', title:'Reflective Pavement Coatings and Surface Temperature Reduction', authors:['F. Ibrahim','C. Novak'], year:2020, venue:'Building and Environment', citations:197,
+   abstract:'Field trials of high-albedo pavement coatings across three cities show surface temperature reductions of 8–15°C, though ambient air temperature effects were modest and highly dependent on street canyon geometry.',
+   contributions:['Quantifies an 8–15°C surface cooling effect from high-albedo coatings.','Shows street canyon geometry strongly moderates ambient air temperature benefits.'],
+   keywords:['urban heat island','reflective pavement','albedo','cooling'], related:['env1','env4']},
+  {id:'env3', domain:'Environmental Science', title:'Tree Canopy Cover and Neighborhood-Level Heat Disparities', authors:['G. Patel','R. Andersson'], year:2021, venue:'Landscape and Urban Planning', citations:344,
+   abstract:'Satellite and census data across 108 US cities reveal a strong inverse relationship between historic disinvestment and present-day canopy cover, with low-canopy neighborhoods experiencing up to 6°C higher peak temperatures.',
+   contributions:['Links historic disinvestment patterns to present-day canopy cover gaps.','Documents up to 6°C temperature disparities tied to canopy inequity.'],
+   keywords:['urban heat island','tree canopy','equity','climate mitigation'], related:['env1','env7']},
+  {id:'env4', domain:'Environmental Science', title:'Cost-Benefit Modeling of Municipal Cooling Interventions', authors:['S. Larsen','T. Mensah'], year:2018, venue:'Journal of Environmental Management', citations:156,
+   abstract:'We model the two-year cost-effectiveness of green roofs, reflective pavement, and canopy expansion, finding canopy expansion offers the lowest cost per degree of cooling but the longest time-to-benefit.',
+   contributions:['Ranks three cooling interventions by short-term cost-effectiveness.','Finds canopy expansion cheapest per degree but slowest to mature.'],
+   keywords:['urban heat island','cost-benefit analysis','cooling','policy'], related:['env1','env2','env6']},
+  {id:'env5', domain:'Environmental Science', title:'Policy Adoption Barriers for Urban Greening Programs', authors:['A. Kowalski','D. Osei'], year:2022, venue:'Environmental Policy and Governance', citations:78,
+   abstract:'Interviews with 42 municipal planners identify fragmented funding cycles and maintenance liability as the dominant barriers to sustained urban greening programs, more so than upfront capital costs.',
+   contributions:['Identifies fragmented funding and maintenance liability as top adoption barriers.','Finds upfront capital cost is a secondary concern relative to governance issues.'],
+   keywords:['urban heat island','policy','green infrastructure','governance'], related:['env3','env7']},
+  {id:'env6', domain:'Environmental Science', title:'Ten-Year Longitudinal Outcomes of Urban Cooling Retrofits', authors:['H. Nakamura','L. Fischer'], year:2024, venue:'Nature Cities', citations:22,
+   abstract:'Tracking retrofits across four cities over a decade, cooling benefits persist but degrade 15–20% due to vegetation stress and coating wear, underscoring a maintenance gap absent from most short-term evaluations.',
+   contributions:['Provides rare decade-long tracking of cooling retrofit performance.','Quantifies 15–20% benefit degradation from deferred maintenance.'],
+   keywords:['urban heat island','longitudinal','cooling','climate mitigation'], related:['env4','env1']},
+  {id:'env7', domain:'Environmental Science', title:'Heat Mitigation Equity: Who Benefits from Cooling Infrastructure?', authors:['M. Adeyemi','J. Berg'], year:2021, venue:'Cities', citations:201,
+   abstract:'Mapping cooling infrastructure investment against neighborhood demographics in six cities, we find new installations disproportionately serve higher-income areas, even where funding is framed as equity-driven.',
+   contributions:['Maps a mismatch between equity-framed funding and actual installation locations.','Proposes siting criteria weighted toward historically underserved neighborhoods.'],
+   keywords:['urban heat island','equity','cooling','policy'], related:['env3','env5']},
+
+  // ---- Medicine ----
+  {id:'med1', domain:'Medicine', title:'Telemedicine Utilization Trends in Chronic Disease Management', authors:['O. Adeyemi','R. Costa'], year:2021, venue:'JAMA Network Open', citations:512,
+   abstract:'Analyzing claims data from 2.1 million patients, telemedicine visits for chronic disease follow-up rose sharply during 2020–2021 and plateaued at roughly triple pre-pandemic levels, with usage concentrated among younger, urban patients.',
+   contributions:['Documents a sustained tripling of telemedicine use for chronic disease follow-up.','Identifies a persistent skew toward younger, urban patient populations.'],
+   keywords:['telemedicine','telehealth','chronic disease','virtual care'], related:['med2','med7','med3']},
+  {id:'med2', domain:'Medicine', title:'Patient Outcomes in Virtual Primary Care: A Systematic Review', authors:['K. Lindholm','B. Osei'], year:2022, venue:'The Lancet Digital Health', citations:398,
+   abstract:'Reviewing 61 studies, virtual primary care shows outcome parity with in-person visits for routine chronic conditions, but weaker evidence for complex diagnostic cases requiring physical examination.',
+   contributions:['Synthesizes 61 studies establishing outcome parity for routine chronic care.','Flags diagnostic complexity as the main limiter of virtual care effectiveness.'],
+   keywords:['telemedicine','virtual care','patient outcomes','primary care'], related:['med1','med5']},
+  {id:'med3', domain:'Medicine', title:'Equity Gaps in Telehealth Access During and After COVID-19', authors:['P. Nkurunziza','S. Weber'], year:2021, venue:'Health Affairs', citations:467,
+   abstract:'Survey data from 14 states reveal persistent telehealth access gaps by income, age, and language, with device and connectivity barriers cited as the leading obstacles even as clinical demand normalized.',
+   contributions:['Quantifies telehealth access gaps by income, age, and language across 14 states.','Identifies device and connectivity access, not clinical demand, as the binding constraint.'],
+   keywords:['telemedicine','equity','access','telehealth'], related:['med1','med4','med7']},
+  {id:'med4', domain:'Medicine', title:'Broadband Infrastructure as a Determinant of Rural Telehealth Uptake', authors:['J. Whitfield','M. Torres'], year:2023, venue:'Rural Health Journal', citations:63,
+   abstract:'County-level analysis links broadband coverage directly to telehealth utilization rates in rural areas, finding a 10-point increase in broadband access associated with a 6-point rise in telehealth uptake.',
+   contributions:['Establishes a county-level link between broadband coverage and telehealth uptake.','Estimates a 6-point uptake increase per 10-point broadband coverage gain.'],
+   keywords:['telemedicine','rural health','broadband','access'], related:['med3','med6']},
+  {id:'med5', domain:'Medicine', title:'Provider Burnout and Sustainability of Hybrid Care Models', authors:['C. Iversen','A. Ndlovu'], year:2022, venue:'Annals of Internal Medicine', citations:145,
+   abstract:'Surveying 900 primary care physicians, hybrid in-person and virtual scheduling is associated with higher reported burnout than either fully in-person or fully virtual models, attributed to context-switching load.',
+   contributions:['Links hybrid scheduling models to elevated physician burnout relative to single-mode care.','Attributes the effect primarily to cognitive context-switching costs.'],
+   keywords:['telemedicine','burnout','hybrid care','provider workload'], related:['med2','med1']},
+  {id:'med6', domain:'Medicine', title:'Reimbursement Policy Shifts and Telehealth Continuity Post-Pandemic', authors:['T. Almeida','F. Grant'], year:2023, venue:'Health Policy', citations:91,
+   abstract:'Comparing reimbursement parity policies across nine countries, sustained telehealth adoption correlates most strongly with permanent (not temporary) reimbursement parity legislation.',
+   contributions:['Compares reimbursement policy design across nine countries.','Finds permanent parity legislation is the strongest predictor of sustained adoption.'],
+   keywords:['telemedicine','reimbursement','policy','telehealth'], related:['med4','med3']},
+  {id:'med7', domain:'Medicine', title:'Chronic Disease Self-Management Outcomes via Remote Monitoring', authors:['Y. Chen','D. Osei'], year:2020, venue:'Diabetes Care', citations:356,
+   abstract:'A randomized trial of remote glucose monitoring combined with telehealth check-ins shows improved HbA1c control at 12 months compared to standard care, with adherence declining after month nine.',
+   contributions:['RCT evidence for improved HbA1c control via remote monitoring plus telehealth.','Identifies an adherence drop-off after nine months, suggesting a re-engagement need.'],
+   keywords:['telemedicine','remote monitoring','chronic disease','diabetes'], related:['med1','med3']},
+
+  // ---- Psychology ----
+  {id:'psy1', domain:'Psychology', title:'Sleep Spindle Density and Overnight Memory Consolidation', authors:['E. Marsh','T. Okonkwo'], year:2019, venue:'Journal of Cognitive Neuroscience', citations:267,
+   abstract:'Polysomnography from 88 participants shows sleep spindle density during stage 2 sleep predicts overnight improvement on declarative memory tasks, independent of total sleep duration.',
+   contributions:['Links spindle density, not total sleep time, to overnight memory gains.','Provides a physiological marker for consolidation efficiency independent of sleep duration.'],
+   keywords:['sleep','memory consolidation','cognition','sleep spindles'], related:['psy4','psy7']},
+  {id:'psy2', domain:'Psychology', title:'Screen Time Before Bed and Next-Day Working Memory', authors:['L. Haddad','S. Berglund'], year:2021, venue:'Sleep Medicine', citations:189,
+   abstract:'A two-week diary study finds each additional hour of pre-sleep screen use predicts a measurable decline in next-day working memory performance, mediated by delayed sleep onset rather than blue light exposure per se.',
+   contributions:['Finds delayed sleep onset, not blue light exposure, mediates the screen-time effect.','Quantifies a dose-response relationship between pre-sleep screen hours and working memory.'],
+   keywords:['sleep','screen time','working memory','cognition'], related:['psy3','psy4']},
+  {id:'psy3', domain:'Psychology', title:'Chronotype Mismatch and Academic Performance in Adolescents', authors:['R. Feldman','N. Osei'], year:2020, venue:'Developmental Psychology', citations:234,
+   abstract:'Adolescents whose chronotype misaligns with early school start times show lower GPA and higher rates of attentional lapses, an effect that narrows substantially in districts with delayed start pilots.',
+   contributions:['Links chronotype mismatch with early school start times to lower academic performance.','Shows delayed school-start pilots substantially narrow the performance gap.'],
+   keywords:['sleep','chronotype','cognition','adolescents'], related:['psy2','psy6']},
+  {id:'psy4', domain:'Psychology', title:'Sleep Restriction Interventions: A Randomized Controlled Trial', authors:['M. Delacroix','J. Park'], year:2022, venue:'Sleep', citations:178,
+   abstract:'Randomizing 210 adults to graded sleep restriction, we find working memory deficits emerge after just one night below six hours, with recovery requiring two full nights of unrestricted sleep.',
+   contributions:['RCT evidence that working memory deficits appear after a single short-sleep night.','Establishes a two-night recovery window following restriction.'],
+   keywords:['sleep','memory','cognition','randomized trial'], related:['psy1','psy2']},
+  {id:'psy5', domain:'Psychology', title:'Napping Strategies for Shift Workers: A Scoping Review', authors:['A. Reyes','K. Lindgren'], year:2023, venue:'Occupational Medicine', citations:41,
+   abstract:'Reviewing 19 studies on shift-worker napping, brief prophylactic naps before night shifts show the most consistent benefit for sustained attention, though evidence quality is generally low.',
+   contributions:['Reviews 19 studies on napping strategies specific to shift workers.','Identifies prophylactic pre-shift napping as the most consistently beneficial approach.'],
+   keywords:['sleep','shift work','napping','cognition'], related:['psy6','psy4']},
+  {id:'psy6', domain:'Psychology', title:'Circadian Disruption and Executive Function in Night-Shift Nurses', authors:['C. Osei','H. Vartanian'], year:2024, venue:'Chronobiology International', citations:19,
+   abstract:'Cognitive testing across a six-week rotation shows measurable executive function decline in night-shift nurses by week three, with only partial recovery on days off, in a sample of 54 participants.',
+   contributions:['Tracks executive function decline across a six-week night-shift rotation.','Finds only partial recovery of executive function on scheduled days off.'],
+   keywords:['sleep','shift work','circadian rhythm','cognition'], related:['psy5','psy3']},
+  {id:'psy7', domain:'Psychology', title:'Meta-Analysis of Sleep Duration and Long-Term Memory Retention', authors:['D. Whitaker','F. Suzuki'], year:2018, venue:'Psychological Bulletin', citations:401,
+   abstract:'Pooling 73 studies, the relationship between sleep duration and long-term memory retention follows an inverted U-shape, with both short and long sleep associated with poorer retention relative to seven to eight hours.',
+   contributions:['Pools 73 studies establishing an inverted-U relationship between sleep duration and memory.','Identifies seven to eight hours as the empirical optimum across the pooled sample.'],
+   keywords:['sleep','memory','meta-analysis','cognition'], related:['psy1','psy4']}
+];
+
+const DOMAIN_LIST = ['All domains','Computer Science','Environmental Science','Medicine','Psychology'];
+
+const EXAMPLES = [
+  'large language model evaluation',
+  'urban heat mitigation',
+  'telemedicine access equity',
+  'sleep and memory consolidation'
+];
+
+/* ============================= STATE ============================= */
+let state = {
+  view: 'search',
+  query: { topic:'', yearMin:2015, yearMax:2026, domain:'All domains' },
+  results: [],
+  hasSearched: false,
+  selectedId: null,
+  saved: new Set(),
+  format: 'APA',
+  llmGap: null
+};
+
+/* ============================= LOGIC ============================= */
+function computeResults(q){
+  const topicWords = q.topic.toLowerCase().split(/\s+/).filter(Boolean);
+  let pool = PAPERS.filter(p =>
+    p.year >= q.yearMin && p.year <= q.yearMax &&
+    (q.domain === 'All domains' || p.domain === q.domain)
+  );
+  
+  const scored = pool.map(p => {
+    const haystack = (p.title + ' ' + p.abstract + ' ' + p.keywords.join(' ')).toLowerCase();
+    let matchScore;
+    if(topicWords.length === 0){
+      matchScore = 0.5;
+    } else {
+      let hits = 0;
+      topicWords.forEach(w => { if (haystack.includes(w)) hits++; });
+      matchScore = hits / topicWords.length;
+    }
+    const citationScore = Math.min(1, Math.log10(p.citations + 1) / 3);
+    const score = matchScore * 0.65 + citationScore * 0.35;
+    return { paper: p, score, matchScore };
+  });
+  
+  // if there's an actual topic, drop zero-match papers; otherwise keep all
+  const filtered = topicWords.length ? scored.filter(s => s.matchScore > 0) : scored;
+  filtered.sort((a,b) => b.score - a.score);
+  return filtered;
+}
+
+function getGapNote(results){
+  // Use LLM-generated gap if available
+  if(state.llmGap){
+    return { domain: 'AI Analysis', text: state.llmGap };
+  }
+  if(!results.length) return null;
+  const counts = {};
+  results.forEach(r => counts[r.paper.domain] = (counts[r.paper.domain]||0) + 1);
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  const [domain, count] = sorted[0];
+  if(count / results.length >= 0.5 && GAP_NOTES[domain]){
+    return { domain, text: GAP_NOTES[domain] };
+  }
+  return { domain: null, text: 'Results span multiple domains, so no single dominant gap pattern emerged. Narrow by domain for a sharper gap analysis.' };
+}
+
+function paperToCSL(p) {
+  return {
+    id: p.id || 'article',
+    type: 'article-journal',
+    title: p.title,
+    author: p.authors.map(a => {
+      const parts = a.split(' ');
+      if (parts.length === 1) return { literal: parts[0] };
+      return { given: parts.slice(0, -1).join(' '), family: parts[parts.length-1] };
+    }),
+    issued: { 'date-parts': [[p.year]] },
+    'container-title': p.venue,
+    DOI: p.doi || ''
+  };
+}
+
+function getFormattedCitation(p, fmt) {
+  try {
+    const cite = new require('@citation-js/core').Cite(paperToCSL(p));
+    if (fmt === 'BibTeX') {
+      return cite.format('bibtex');
+    }
+    // Map UI format names to CSL template names
+    let template = 'apa';
+    if (fmt === 'IEEE') template = 'ieee'; // Note: IEEE requires plugin or might fallback
+    if (fmt === 'MLA') template = 'mla'; // Note: MLA requires plugin or might fallback
+    
+    // Citation.js native templates include apa, vancouver, harvard1. 
+    // If ieee/mla fail to load, it falls back to apa. We use HTML output for rich text.
+    return cite.format('bibliography', {
+      format: 'html',
+      template: template,
+      lang: 'en-US'
+    }).trim();
+  } catch (e) {
+    console.error("Citation.js error:", e);
+    // Fallback to plain string if citation.js fails
+    return `${p.authors.join(', ')} (${p.year}). ${p.title}. <em>${p.venue}</em>.`;
+  }
+}
+
+function plainText(html){ return html.replace(/<[^>]+>/g, ''); }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=> t.classList.remove('show'), 2500);
+}
+
+/* ============================= ACTIONS ============================= */
+function setView(v){
+  const root = document.getElementById('view-root');
+  root.classList.remove('fade-in');
+  void root.offsetWidth; // trigger reflow
+  
+  state.view = v;
+  render();
+  
+  root.classList.add('fade-in');
+}
+
+async function runSearch(fromExample){
+  const topic = document.getElementById('inp-topic') ? document.getElementById('inp-topic').value : state.query.topic;
+  const yearMin = parseInt(document.getElementById('inp-yearmin')?.value) || state.query.yearMin;
+  const yearMax = parseInt(document.getElementById('inp-yearmax')?.value) || state.query.yearMax;
+  const domain = document.getElementById('inp-domain')?.value || state.query.domain;
+  
+  state.query = { topic: fromExample !== undefined ? fromExample : topic, yearMin, yearMax, domain };
+  
+  const root = document.getElementById('view-root');
+  root.innerHTML = `<div class="empty-state"><span class="material-symbols-outlined icon" style="animation: spin 2s linear infinite;">sync</span><div class="big">Searching OpenAlex...</div><p>Fetching live research papers.</p></div>`;
+  if(!document.getElementById('spin-style')){
+      const style = document.createElement('style');
+      style.id = 'spin-style';
+      style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
+      document.head.appendChild(style);
+  }
+  
+  try {
+    const res = await fetch(`/api/search?topic=${encodeURIComponent(state.query.topic)}&yearMin=${state.query.yearMin}&yearMax=${state.query.yearMax}&domain=${encodeURIComponent(state.query.domain)}`);
+    const data = await res.json();
+    
+    if (data.results) {
+      state.results = data.results;
+      state.llmGap = data.gap || null;
+      data.results.forEach(r => {
+        if (!PAPERS.find(p => p.id === r.paper.id)) {
+          PAPERS.push(r.paper);
+        }
+      });
+    } else {
+      state.results = [];
+      state.llmGap = null;
+    }
+  } catch (err) {
+    console.error(err);
+    state.results = [];
+    state.llmGap = null;
+    toast('Error fetching search results');
+  }
+  
+  state.hasSearched = true;
+  setView('board');
+}
+
+function useExample(ex){ runSearch(ex); }
+
+function toggleSave(id, evt){
+  if(evt) evt.stopPropagation();
+  if(state.saved.has(id)){
+    state.saved.delete(id);
+    toast('Removed from bibliography');
+  } else {
+    state.saved.add(id);
+    toast('Saved to bibliography');
+  }
+  render();
+}
+
+function openDetail(id){
+  state.selectedId = id;
+  setView('detail');
+}
+
+function setFormat(f){
+  state.format = f;
+  render();
+}
+
+function copyEntry(id){
+  const p = PAPERS.find(x=>x.id===id);
+  const fmt = state.format;
+  const raw = getFormattedCitation(p, fmt);
+  const text = fmt==='BibTeX' ? raw : plainText(raw);
+  navigator.clipboard?.writeText(text).then(()=>toast('Citation copied to clipboard')).catch(()=>toast('Copy failed'));
+}
+
+function downloadBibliography(){
+  const list = getBibList();
+  const fmt = state.format;
+  let out = '';
+  list.forEach((p,i) => {
+    const raw = getFormattedCitation(p, fmt);
+    out += (fmt==='BibTeX' ? raw : plainText(raw)) + '\n\n';
+  });
+  const blob = new Blob([out], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bibliography-${fmt.toLowerCase()}.${fmt==='BibTeX'?'bib':'txt'}`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Bibliography download started');
+}
+
+function getBibList(){
+  if(state.saved.size > 0) return PAPERS.filter(p => state.saved.has(p.id));
+  if(state.hasSearched) return state.results.map(r=>r.paper);
+  return [];
+}
+
+/* ============================= RENDER ============================= */
+function render(){
+  renderTabs();
+  const root = document.getElementById('view-root');
+  if(state.view === 'search') root.innerHTML = renderSearch();
+  else if(state.view === 'board') root.innerHTML = renderBoard();
+  else if(state.view === 'detail') root.innerHTML = renderDetail();
+  else if(state.view === 'bib') root.innerHTML = renderBib();
+}
+
+function renderTabs(){
+  const tabs = [
+    {id:'search', n:'01', label:'Research Query'},
+    {id:'board', n:'02', label:'Discovery Board'},
+    {id:'detail', n:'03', label:'Paper Detail'},
+    {id:'bib', n:'04', label:'Bibliography'}
+  ];
+  document.getElementById('tabs').innerHTML = tabs.map(t =>
+    `<div class="tab ${state.view===t.id?'active':''}" onclick="setView('${t.id}')">
+      <span class="n">${t.n}</span>${t.label}
+     </div>`
+  ).join('');
+}
+
+function renderSearch(){
+  const q = state.query;
+  return `
+    <h2 class="section-title">Research Query</h2>
+    <p class="section-sub">Describe a topic, narrow by year and domain, and the agent will rank the catalog by relevance and citation strength.</p>
+    
+    <div class="field-row">
+      <div class="field" style="flex:2;">
+        <label for="inp-topic">Topic or research question</label>
+        <div style="position:relative;">
+          <span class="material-symbols-outlined" style="position:absolute; left:12px; top:12px; color:var(--ink-soft); font-size:20px;">search</span>
+          <input type="text" id="inp-topic" placeholder="e.g. large language model evaluation" value="${escapeAttr(q.topic)}" style="width:100%; padding-left:40px;">
+        </div>
+      </div>
+      
+      <div class="field small">
+        <label for="inp-yearmin">From year</label>
+        <input type="number" id="inp-yearmin" value="${q.yearMin}" min="2000" max="2026">
+      </div>
+      <div class="field small">
+        <label for="inp-yearmax">To year</label>
+        <input type="number" id="inp-yearmax" value="${q.yearMax}" min="2000" max="2026">
+      </div>
+      
+      <div class="field">
+        <label for="inp-domain">Domain</label>
+        <select id="inp-domain">
+          ${DOMAIN_LIST.map(d => `<option ${d===q.domain?'selected':''}>${d}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    
+    <button class="btn" onclick="runSearch()">
+      Search catalog
+      <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+    </button>
+    
+    <div class="hint-block">
+      <div style="margin-bottom:12px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.8px; text-transform:uppercase; color:var(--ink-soft); font-weight:600;">
+        <span class="material-symbols-outlined" style="font-size:16px; margin-right:4px;">lightbulb</span> Try an example
+      </div>
+      <div class="chips">
+        ${EXAMPLES.map(e => `<div class="chip" onclick="document.getElementById('inp-topic').value='${escapeAttr(e)}'; useExample('${escapeAttr(e)}')">${e}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderBoard(){
+  if(!state.hasSearched){
+    return `
+      <div class="empty-state">
+        <span class="material-symbols-outlined icon">travel_explore</span>
+        <div class="big">No search run yet</div>
+        <p style="margin-bottom:24px;">Head to <em>Research Query</em> to search the catalog.</p>
+        <button class="btn ghost" onclick="setView('search')">Go to Research Query</button>
+      </div>`;
+  }
+  
+  const results = state.results;
+  const gap = getGapNote(results);
+  
+  return `
+    <h2 class="section-title">Paper Discovery Board</h2>
+    <p class="section-sub">${state.query.topic ? `Ranked results for “${escapeHtml(state.query.topic)}”` : 'Ranked by citation strength (no topic entered)'} · ${state.query.yearMin}–${state.query.yearMax} · ${state.query.domain}</p>
+    
+    ${gap ? `
+      <div class="gap-panel">
+        <span class="gap-label"><span class="material-symbols-outlined" style="font-size:16px;">insights</span> Identified research gap${gap.domain?` · ${gap.domain}`:''}</span>
+        <p>${gap.text}</p>
+      </div>` : ''}
+      
+    <div class="board-toolbar">
+      <div class="board-count">${results.length} paper${results.length===1?'':'s'} found</div>
+      <button class="btn ghost small" onclick="setView('bib')">Go to bibliography <span class="material-symbols-outlined" style="font-size:14px; margin-left:4px;">arrow_forward</span></button>
+    </div>
+    
+    <div class="card-grid">
+      ${results.length ? results.map((r,i) => renderCard(r,i)).join('') : `
+        <div class="empty-state">
+          <span class="material-symbols-outlined icon">search_off</span>
+          <div class="big">No papers matched this query</div>
+          <p>Try broadening the year range or clearing the topic.</p>
+        </div>`}
+    </div>
+  `;
+}
+
+function renderCard(r, i){
+  const p = r.paper;
+  const pct = Math.round(r.score * 100);
+  const saved = state.saved.has(p.id);
+  
+  return `
+    <div class="paper-card" onclick="openDetail('${p.id}')">
+      <div class="rank-block">
+        <span class="rank-lbl">Rank</span>
+        <div class="rank-num">${i+1}</div>
+      </div>
+      
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <p class="paper-title">${escapeHtml(p.title)}</p>
+            <div class="paper-meta">
+              <span class="material-symbols-outlined" style="font-size:14px; vertical-align:text-bottom;">group</span> ${p.authors.join(', ')} 
+              &nbsp;·&nbsp; ${p.year} &nbsp;·&nbsp; ${p.venue} 
+              &nbsp;·&nbsp; <span class="material-symbols-outlined" style="font-size:14px; vertical-align:text-bottom;">format_quote</span> ${p.citations.toLocaleString()}
+            </div>
+          </div>
+        </div>
+        
+        <p class="contribution">${escapeHtml(p.contributions[0])}</p>
+        
+        <div class="card-tags">
+          <span class="tag domain">${p.domain}</span>
+          ${p.keywords.slice(0,2).map(k => `<span class="tag">${escapeHtml(k)}</span>`).join('')}
+          ${p.pdf_url ? `<a href="${p.pdf_url}" target="_blank" onclick="event.stopPropagation()" class="tag" style="background:var(--ai-accent-bg); color:var(--ai-accent); text-decoration:none; cursor:pointer;"><span class="material-symbols-outlined" style="font-size:12px; vertical-align:middle; margin-right:2px;">picture_as_pdf</span>PDF</a>` : ''}
+          <div style="flex:1"></div>
+          <button class="save-star ${saved?'saved':''}" onclick="toggleSave('${p.id}', event)" title="Save to bibliography">
+            <span class="material-symbols-outlined">${saved?'bookmark':'bookmark_add'}</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="stamp">
+        <span class="pct">${pct}</span>
+        <span class="lbl">Match</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderDetail(){
+  const p = PAPERS.find(x => x.id === state.selectedId);
+  if(!p){
+    return `
+      <div class="empty-state">
+        <span class="material-symbols-outlined icon">description</span>
+        <div class="big">No paper selected</div>
+        <p style="margin-bottom:24px;">Choose a paper from the Discovery Board to see its details.</p>
+        <button class="btn ghost" onclick="setView('board')">Go to Discovery Board</button>
+      </div>`;
+  }
+  
+  const saved = state.saved.has(p.id);
+  
+  return `
+    <div class="detail-head">
+      <div style="flex:1; padding-right:20px;">
+        <p class="detail-title">${escapeHtml(p.title)}</p>
+        <div class="detail-meta">
+          <span class="material-symbols-outlined" style="font-size:16px;">group</span> ${p.authors.join(', ')} 
+          &nbsp;·&nbsp; <span class="material-symbols-outlined" style="font-size:16px;">calendar_today</span> ${p.year} 
+          &nbsp;·&nbsp; ${p.venue} 
+          &nbsp;·&nbsp; <span class="material-symbols-outlined" style="font-size:16px;">format_quote</span> ${p.citations.toLocaleString()} citations
+          <span class="tag domain" style="margin-left:12px;">${p.domain}</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        ${p.pdf_url ? `<a href="${p.pdf_url}" target="_blank" class="btn ghost" style="text-decoration:none;">
+          <span class="material-symbols-outlined">picture_as_pdf</span> View PDF
+        </a>` : ''}
+        <button class="btn ghost" onclick="toggleSave('${p.id}')">
+          <span class="material-symbols-outlined">${saved?'bookmark_remove':'bookmark_add'}</span> 
+          ${saved?'Remove':'Save Paper'}
+        </button>
+      </div>
+    </div>
+    
+    <div class="detail-grid">
+      <div>
+        <div class="block-label"><span class="material-symbols-outlined" style="font-size:14px; margin-right:4px;">subject</span> Abstract</div>
+        <p class="abstract">${escapeHtml(p.abstract)}</p>
+        
+        <div class="block-label"><span class="material-symbols-outlined" style="font-size:14px; margin-right:4px;">fact_check</span> Key contributions</div>
+        <ul class="contrib-list">${p.contributions.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
+      </div>
+      
+      <div>
+        <div class="block-label"><span class="material-symbols-outlined" style="font-size:14px; margin-right:4px;">hub</span> Citation graph</div>
+        ${renderGraph(p)}
+        
+        <div class="block-label" style="margin-top:24px;"><span class="material-symbols-outlined" style="font-size:14px; margin-right:4px;">library_books</span> Related papers</div>
+        <div class="related-list">
+          ${p.related.map(rid => {
+            const rp = PAPERS.find(x=>x.id===rid);
+            if(!rp) return '';
+            return `<div class="related-item" onclick="openDetail('${rp.id}')">
+                      <span class="rt">${escapeHtml(rp.title)}</span>
+                      <span class="ry">${rp.year}</span>
+                    </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function wrapTitle(title, maxLen){
+  let t = title.length > maxLen ? title.slice(0, maxLen-1) + '…' : title;
+  if(t.length <= 22) return [t];
+  let mid = Math.floor(t.length/2);
+  let splitAt = t.lastIndexOf(' ', mid);
+  if(splitAt < 6) splitAt = t.indexOf(' ', mid);
+  if(splitAt === -1) return [t];
+  return [t.slice(0,splitAt), t.slice(splitAt+1)];
+}
+
+function renderGraph(p){
+  const w=440, h=300, cx=w/2, cy=h/2, radius=105;
+  const rel = p.related.map(id => PAPERS.find(x=>x.id===id)).filter(Boolean).slice(0,5);
+  const n = rel.length || 1;
+  let nodes = '', edges = '';
+  
+  rel.forEach((rp, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI/2;
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    edges += `<line class="edge" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`;
+    const lines = wrapTitle(rp.title, 30);
+    const labelY = y - (lines.length-1)*5;
+    const tspans = lines.map((ln, li) => `<tspan x="${x}" dy="${li===0?0:12}">${escapeHtml(ln)}</tspan>`).join('');
+    nodes += `<g onclick="openDetail('${rp.id}')">
+      <circle class="node-rel" cx="${x}" cy="${y}" r="38"/>
+      <text class="rel-label" x="${x}" y="${labelY}" text-anchor="middle">${tspans}</text>
+    </g>`;
+  });
+  
+  const centerLines = wrapTitle(p.title, 34);
+  const centerLabelY = cy - (centerLines.length-1)*5 + (centerLines.length>2?-5:0);
+  const centerTspans = centerLines.map((ln,li) => `<tspan x="${cx}" dy="${li===0?0:13}">${escapeHtml(ln)}</tspan>`).join('');
+  
+  return `<svg class="graph" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+    ${edges}
+    <circle class="node-center" cx="${cx}" cy="${cy}" r="52"/>
+    <text class="center-label" x="${cx}" y="${centerLabelY}" text-anchor="middle">${centerTspans}</text>
+    ${nodes}
+  </svg>`;
+}
+
+function renderBib(){
+  const list = getBibList();
+  const formats = ['APA','IEEE','MLA','BibTeX'];
+  const usingSaved = state.saved.size > 0;
+  
+  return `
+    <h2 class="section-title">Bibliography Export</h2>
+    <p class="section-sub">${usingSaved ? `Showing ${list.length} saved paper${list.length===1?'':'s'} (marked with <span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">bookmark</span>).` : list.length ? `No papers saved yet — showing all ${list.length} results from your last search.` : 'No papers to export yet. Run a search and save papers first.'}</p>
+    
+    <div class="format-row">
+      <div style="font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; font-weight:600; color:var(--ink-soft); margin-right:8px;">Format:</div>
+      ${formats.map(f => `<button class="format-btn ${state.format===f?'active':''}" onclick="setFormat('${f}')">${f}</button>`).join('')}
+      <div style="flex:1;"></div>
+      ${list.length ? `
+        <button class="btn" onclick="downloadBibliography()">
+          <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+          Download .${state.format==='BibTeX'?'bib':'txt'}
+        </button>` : ''}
+    </div>
+    
+    ${list.length ? list.map((p,i) => renderBibEntry(p,i)).join('') : `
+      <div class="empty-state">
+        <span class="material-symbols-outlined icon">format_list_bulleted</span>
+        <div class="big">Nothing to export</div>
+        <p style="margin-bottom:24px;">Search the catalog and save a few papers first.</p>
+        <button class="btn ghost" onclick="setView('search')">Go to Research Query</button>
+      </div>`}
+  `;
+}
+
+function renderBibEntry(p, i){
+  const fmt = state.format;
+  let raw = getFormattedCitation(p, fmt);
+  
+  // Clean up citation.js HTML output which sometimes includes <div class="csl-entry">
+  if(fmt !== 'BibTeX') {
+    raw = raw.replace(/<div class="csl-entry">/, '').replace(/<\/div>/, '');
+  }
+  
+  const display = fmt==='BibTeX' ? `<pre style="white-space:pre-wrap; font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin:0; background:rgba(255,255,255,0.5); padding:16px; border-radius:6px; border:1px solid var(--line);">${escapeHtml(raw)}</pre>` : raw;
+  
+  return `
+    <div class="biblio-entry">
+      <div class="biblio-text">
+        ${fmt!=='BibTeX' && fmt!=='IEEE' ? `<span class="bkey">${String(i+1).padStart(2,'0')}</span>`:''}
+        ${display}
+      </div>
+      <div class="biblio-actions">
+        <button class="btn ghost small" onclick="copyEntry('${p.id}')" title="Copy to clipboard">
+          <span class="material-symbols-outlined" style="font-size:16px;">content_copy</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================= UTIL ============================= */
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(str){ return escapeHtml(str); }
+
+/* ============================= INIT ============================= */
+render();
+</script>
+</body>
+</html>

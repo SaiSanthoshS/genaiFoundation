@@ -1,0 +1,3 @@
+Automated Invoice & Expense Manager
+Agent: When user uploads an invoice photo or PDF, the agent runs optical character recognition to extract line items and amounts, classifies each expense into a category, computes GST breakdowns, aggregates figures into a monthly report, and saves the structured data to a cloud folder.
+Frontend: Invoice Upload Page — camera, gallery, or PDF drag-drop; upload triggers the agent | Extracted Items Review — agent-parsed table of line items with edit-in-place fields | Category Tags — agent-assigned labels on each line; user can override | Monthly Expense Dashboard — agent-aggregated category breakdown and GST summary | Report Export Page — agent-compiled Excel or PDF with one-click download

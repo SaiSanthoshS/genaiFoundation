@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live Election Results Tracker for Indian General Elections 2024 — Real-time constituency results, interactive map, party leaderboard, swing analysis, and upset detection.">
+  <meta name="theme-color" content="#060a14">
+  <title>Election Tracker 2024 — Live Results Dashboard</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="css/leaderboard.css">
+  <link rel="stylesheet" href="css/feed.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Drilldown modal styles (inline to keep in one place) -->
+  <style>
+    .drill-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--space-6);
+    }
+    .drill-header__name {
+      font-size: var(--fs-xl);
+      font-weight: var(--fw-bold);
+      margin-bottom: 4px;
+    }
+    .drill-header__state {
+      font-size: var(--fs-sm);
+      color: var(--text-tertiary);
+    }
+    .drill-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+    .drill-summary__card {
+      padding: var(--space-3) var(--space-4);
+      text-align: center;
+    }
+    .drill-summary__label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .drill-summary__value {
+      font-family: var(--font-mono);
+      font-size: var(--fs-lg);
+      font-weight: var(--fw-bold);
+    }
+    .drill-section {
+      margin-bottom: var(--space-6);
+    }
+    .drill-section__title {
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid rgba(99, 118, 163, 0.1);
+    }
+    .drill-candidates {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .drill-candidate {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      background: rgba(99, 118, 163, 0.04);
+      border: 1px solid transparent;
+      transition: background 0.2s;
+    }
+    .drill-candidate:hover {
+      background: rgba(99, 118, 163, 0.08);
+    }
+    .drill-candidate--winner {
+      background: rgba(34, 197, 94, 0.06);
+      border-color: rgba(34, 197, 94, 0.15);
+    }
+    .drill-candidate__rank {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      width: 20px;
+      text-align: center;
+    }
+    .drill-candidate__party-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .drill-candidate__info {
+      min-width: 120px;
+    }
+    .drill-candidate__name {
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
+    }
+    .drill-candidate__party-name {
+      font-size: var(--fs-xs);
+      color: var(--text-tertiary);
+    }
+    .drill-candidate__bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: rgba(99, 118, 163, 0.08);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+    .drill-candidate__bar {
+      height: 100%;
+      border-radius: var(--radius-pill);
+      transition: width 0.6s var(--ease-out);
+    }
+    .drill-candidate__stats {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      min-width: 80px;
+    }
+    .drill-candidate__votes {
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-semibold);
+    }
+    .drill-candidate__pct {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--text-tertiary);
+    }
+    .drill-candidate__winner-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-success);
+      padding: 2px 8px;
+      background: rgba(34, 197, 94, 0.12);
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+    .drill-history {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .drill-history__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      background: rgba(99, 118, 163, 0.04);
+    }
+    .drill-history__label {
+      font-size: var(--fs-sm);
+      color: var(--text-secondary);
+    }
+    .drill-history__value {
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-semibold);
+    }
+    @media (max-width: 640px) {
+      .drill-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .drill-candidate__bar-wrap {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================
+       HEADER
+       ============================ -->
+  <header class="app-header" id="app-header">
+    <div class="app-logo">
+      <div class="app-logo__icon">🗳️</div>
+      <div class="app-logo__text">
+        Election <span>Tracker</span> 2024
+      </div>
+      <div class="live-badge" id="live-badge">
+        <span class="live-badge__dot"></span>
+        <span class="live-badge__text">READY</span>
+      </div>
+    </div>
+
+    <div class="header-stats">
+      <div class="header-stat">
+        <span class="header-stat__label">Declared</span>
+        <span class="header-stat__value font-mono" id="stat-declared">0</span>
+      </div>
+      <div class="header-stat">
+        <span class="header-stat__label">Remaining</span>
+        <span class="header-stat__value font-mono" id="stat-remaining">543</span>
+      </div>
+      <div class="header-stat">
+        <span class="header-stat__label">Leading</span>
+        <span class="header-stat__value" id="stat-lead">—</span>
+      </div>
+      <div class="header-stat">
+        <span class="header-stat__label">Time</span>
+        <span class="header-stat__value font-mono" id="header-clock" style="font-size: var(--fs-base)">--:--:--</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <!-- Speed Controls -->
+      <div class="speed-control">
+        <button class="speed-btn active" data-speed="1">1×</button>
+        <button class="speed-btn" data-speed="2">2×</button>
+        <button class="speed-btn" data-speed="5">5×</button>
+        <button class="speed-btn" data-speed="10">10×</button>
+      </div>
+      <!-- Action Buttons -->
+      <button class="btn btn--primary" id="btn-start">▶ Start</button>
+      <button class="btn btn--ghost hidden" id="btn-pause">⏸ Pause</button>
+      <button class="btn btn--ghost" id="btn-reset">↻ Reset</button>
+    </div>
+  </header>
+
+  <!-- ============================
+       REGION SELECTOR BAR
+       ============================ -->
+  <div class="region-bar" id="region-bar">
+    <div class="search-box" style="width: 240px; flex-shrink: 0;">
+      <span class="search-box__icon">🔍</span>
+      <input
+        type="text"
+        class="search-box__input"
+        id="region-search"
+        placeholder="Search constituency..."
+        autocomplete="off"
+      >
+      <div class="search-results" id="search-results"></div>
+    </div>
+    <div class="region-bar__chips" id="region-chips">
+      <!-- Chips rendered by JS -->
+    </div>
+  </div>
+
+  <!-- ============================
+       MAIN LAYOUT
+       ============================ -->
+  <main class="app-layout">
+
+    <!-- ---- LEFT: LEADERBOARD ---- -->
+    <aside class="glass-panel glass-panel--static panel panel--leaderboard" id="panel-leaderboard">
+      <div class="section-header">
+        <span class="section-title">
+          <span class="section-title__icon">🏆</span>
+          Party Leaderboard
+        </span>
+        <div class="tabs">
+          <button class="tab leaderboard-tab active" data-view="parties">Parties</button>
+          <button class="tab leaderboard-tab" data-view="alliances">Alliances</button>
+        </div>
+      </div>
+
+      <div class="leaderboard__list" id="leaderboard-list">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Majority Bar -->
+      <div class="majority-tracker" id="majority-bar">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span class="text-xs text-muted uppercase tracking-wide font-semibold">Seat Distribution</span>
+          <span class="text-xs text-tertiary font-mono">Majority: 272</span>
+        </div>
+        <div class="majority-bar">
+          <div class="majority-line"></div>
+        </div>
+        <div class="majority-labels"></div>
+      </div>
+
+      <!-- Sentiment Section -->
+      <div id="sentiment-section" class="sentiment-section"></div>
+    </aside>
+
+    <!-- ---- CENTER: MAP ---- -->
+    <section class="glass-panel glass-panel--static panel panel--map" id="panel-map">
+      <div class="section-header">
+        <span class="section-title">
+          <span class="section-title__icon">🗺️</span>
+          National Results Map
+        </span>
+      </div>
+
+      <div class="map-container" id="map-container">
+        <!-- SVG rendered by JS -->
+      </div>
+
+      <div class="map-legend" id="map-legend">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ---- RIGHT: LIVE FEED ---- -->
+    <aside class="glass-panel glass-panel--static panel panel--feed relative" id="panel-feed">
+      <div class="section-header">
+        <span class="section-title">
+          <span class="section-title__icon">📡</span>
+          Live Updates
+        </span>
+        <span class="text-xs font-mono text-muted" id="feed-count"></span>
+      </div>
+
+      <div class="feed__filters" id="feed-filters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="upsets">⚡ Upsets</button>
+        <button class="chip" data-filter="bjp" style="border-color: rgba(255,107,0,0.3)">BJP</button>
+        <button class="chip" data-filter="inc" style="border-color: rgba(0,191,166,0.3)">INC</button>
+        <button class="chip" data-filter="sp" style="border-color: rgba(230,57,70,0.3)">SP</button>
+        <button class="chip" data-filter="tmc" style="border-color: rgba(46,204,64,0.3)">TMC</button>
+      </div>
+
+      <div class="feed__list" id="feed-list">
+        <!-- Rendered by JS -->
+      </div>
+    </aside>
+  </main>
+
+  <!-- ============================
+       DRILLDOWN MODAL
+       ============================ -->
+  <div class="modal-overlay" id="modal-overlay"></div>
+  <div class="modal" id="drilldown-modal">
+    <div class="modal__header">
+      <span class="text-sm font-semibold text-secondary">Constituency Detail</span>
+      <button class="btn btn--icon modal__close" aria-label="Close modal">✕</button>
+    </div>
+    <div class="modal__body">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+  <!-- ============================
+       MAP TOOLTIP
+       ============================ -->
+  <div class="map-tooltip" id="map-tooltip">
+    <div class="map-tooltip__name"></div>
+    <div class="map-tooltip__stats"></div>
+    <div class="map-tooltip__party"></div>
+  </div>
+
+  <!-- ============================
+       TOAST NOTIFICATIONS
+       ============================ -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ============================
+       SCRIPTS (order matters)
+       ============================ -->
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/agent.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script src="js/drilldown.js"></script>
+  <script src="js/feed.js"></script>
+  <script src="js/sentiment.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

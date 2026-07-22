@@ -1,0 +1,3 @@
+GitHub PR Code Review Agent
+Agent: When user submits a repository URL and PR number, the agent fetches the diff, analyses it for logic errors and code smells, scans for known security vulnerabilities, posts inline comments directly on the PR, and generates a summary report with a severity breakdown.
+Frontend: PR Input Form — user enters repo URL and PR number, clicks "Review" to trigger the agent | PR Diff Viewer — the agent's inline comments appear as annotations on the diff | Issue Summary Table — agent-categorised findings with severity tags (critical / warning / info) | Report Page — exportable PDF of the full review with a pass/fail verdict

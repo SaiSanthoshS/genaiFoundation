@@ -1,0 +1,3 @@
+Heritage & Tourism Audio Guide
+Agent: When user selects a city, the agent discovers nearby UNESCO and heritage sites, fetches cultural and historical information for each, plans an optimised walking route, generates a spoken audio guide script per site, and packages everything into a downloadable offline itinerary.
+Frontend: City Input & Map — city entry triggers the agent to populate the map | Heritage Sites Map — agent-placed markers with preview cards on click | Site Detail Page — agent-written history and cultural context with photos | Walking Route Planner — agent-optimised order of sites with estimated walk times between each | Audio Guide Player — agent-generated script read aloud via text-to-speech, one track per site

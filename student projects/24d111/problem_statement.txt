@@ -1,0 +1,3 @@
+Academic Research Assistant
+Agent: When user submits a research question, the agent searches academic databases, ranks papers by relevance and citation count, reads abstracts to extract key contributions, identifies research gaps by comparing findings across papers, and generates a formatted bibliography.
+Frontend: Research Query Input — topic, year range, and domain filters; "Search" triggers the agent | Paper Discovery Board — agent-ranked cards with relevance score, citation count, and key-contribution snippet | Paper Detail View — agent-extracted key points, citation graph, and related papers | Bibliography Export Page — agent-formatted in APA/IEEE/MLA, one-click download

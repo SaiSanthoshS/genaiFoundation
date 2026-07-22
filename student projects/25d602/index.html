@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPulse — Biodiversity & Wildlife Tracker</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+          
+    <!-- Leaflet Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside>
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i data-lucide="leaf"></i>
+            </div>
+            <div class="logo-text">
+                <h1>EcoPulse</h1>
+                <p>Wildlife Tracker Agent</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a class="nav-item active" data-view="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" data-view="map">
+                    <i data-lucide="map"></i>
+                    <span>Interactive Map</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" data-view="alerts">
+                    <i data-lucide="bell-ring"></i>
+                    <span>Alert Center</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="nav-footer">
+            <p>Active Agent: V2.4-Active</p>
+            <p>Connected to iNaturalist API</p>
+        </div>
+    </aside>
+
+    <!-- MAIN INTERFACE -->
+    <main>
+        <!-- HEADER BAR -->
+        <header>
+            <div class="header-title">
+                <h2 id="header-text">Biodiversity Dashboard</h2>
+            </div>
+            
+            <div class="search-widget">
+                <div class="coords-display" id="selected-coords">
+                    Lat: 37.7749 | Lng: -122.4194
+                </div>
+                <button class="btn-primary" id="find-wildlife-btn">
+                    <i data-lucide="search-code"></i>
+                    <span>Find Wildlife</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- VIEWPORTS -->
+        <div class="views-container">
+            
+            <!-- VIEW 1: DASHBOARD -->
+            <div class="view active" id="view-dashboard">
+                <div class="dashboard-grid">
+                    <div class="stat-card glass">
+                        <i data-lucide="eye" class="stat-icon"></i>
+                        <p>Total Sightings</p>
+                        <h3 id="stat-total-sightings">0</h3>
+                        <div class="trend success">
+                            <i data-lucide="trending-up"></i>
+                            <span>Real-time database fetch</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card glass">
+                        <i data-lucide="dna" class="stat-icon"></i>
+                        <p>Unique Species</p>
+                        <h3 id="stat-unique-species">0</h3>
+                        <div class="trend success">
+                            <i data-lucide="shield-check"></i>
+                            <span>Taxonomy verified</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card glass">
+                        <i data-lucide="alert-triangle" class="stat-icon" style="color: var(--iucn-cr);"></i>
+                        <p>Endangered Species</p>
+                        <h3 id="stat-threatened-count">0</h3>
+                        <div class="trend danger" id="threatened-trend">
+                            <i data-lucide="shield-alert"></i>
+                            <span>IUCN Red List matches</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card glass">
+                        <i data-lucide="navigation" class="stat-icon"></i>
+                        <p>Search Area Radius</p>
+                        <h3 id="stat-radius">15 km</h3>
+                        <div class="trend warning">
+                            <i data-lucide="locate"></i>
+                            <span>Selected map point</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card glass">
+                        <h4>
+                            <i data-lucide="pie-chart" style="color: var(--accent);"></i>
+                            Species Distribution by Class
+                        </h4>
+                        <div class="chart-container">
+                            <canvas id="class-doughnut-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card glass">
+                        <h4>
+                            <i data-lucide="bar-chart-3" style="color: var(--accent);"></i>
+                            Sightings Log Timeline
+                        </h4>
+                        <div class="chart-container">
+                            <canvas id="timeline-line-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: INTERACTIVE MAP -->
+            <div class="view" id="view-map" style="padding: 0;">
+                <div class="map-view-container">
+                    
+                    <!-- Left Filter Panel -->
+                    <div class="map-sidebar glass" style="border-radius: 0 16px 16px 0; border-left: none; padding: 24px;">
+                        <div class="filter-section">
+                            <h4>
+                                <i data-lucide="sliders-horizontal" style="color: var(--accent);"></i>
+                                Search Parameters
+                            </h4>
+                            
+                            <div class="form-group">
+                                <label for="radius-slider">Search Radius (km)</label>
+                                <input type="range" id="radius-slider" class="form-control" min="1" max="50" value="15">
+                                <div class="range-display">
+                                    <span>1 km</span>
+                                    <span id="radius-val" style="color: var(--accent); font-weight:600;">15 km</span>
+                                    <span>50 km</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="start-date">Observation Start Date</label>
+                                <input type="date" id="start-date" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="end-date">Observation End Date</label>
+                                <input type="date" id="end-date" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Agent reasoning console log -->
+                        <div class="agent-logs-card glass">
+                            <div class="agent-logs-header">
+                                <h4 style="font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; margin:0;">
+                                    <i data-lucide="terminal" style="color: var(--accent);"></i>
+                                    Agent Reasoning Log
+                                </h4>
+                                <div class="agent-status-badge idle" id="agent-status">
+                                    <div class="pulse-dot"></div>
+                                    <span id="agent-status-text">Idle</span>
+                                </div>
+                            </div>
+                            <div class="logs-display" id="logs-display">
+                                <div class="log-entry">
+                                    <span class="log-time">[14:30:00]</span>
+                                    <span class="log-tag info">[SYSTEM]</span>
+                                    <span>Agent loaded and standby. Double-click or click map to select coordinates, then hit "Find Wildlife".</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map pane -->
+                    <div class="map-pane">
+                        <div id="map-container"></div>
+                        
+                        <!-- Search overlay loader -->
+                        <div class="loading-overlay" id="loading-overlay">
+                            <div class="spinner"></div>
+                            <div class="loading-text" id="loading-text">Agent Querying iNaturalist Database...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: ALERT SETUP -->
+            <div class="view" id="view-alerts">
+                <div class="alert-view-layout">
+                    <!-- Config side -->
+                    <div class="alert-config-card glass">
+                        <h4 style="font-size:16px; font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="shield-alert" style="color: var(--accent);"></i>
+                            Alert Preferences
+                        </h4>
+                        <p style="font-size:13px; color: var(--text-secondary); margin-bottom:20px;">
+                            Configure the AI Agent's real-time monitoring rules. When a matching species observation is registered in the search area, the agent fires a push alert and logs a safety report.
+                        </p>
+
+                        <div class="form-group">
+                            <label>Watch Species Classes</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-class-mammalia" checked>
+                                    <span>Mammals (Mammalia)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-class-aves" checked>
+                                    <span>Birds (Aves)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-class-reptilia" checked>
+                                    <span>Reptiles (Reptilia)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-class-amphibia" checked>
+                                    <span>Amphibians (Amphibia)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-class-actinopterygii" checked>
+                                    <span>Fishes (Actinopterygii)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 24px;">
+                            <label>Conservation Threshold</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-level-cr" checked>
+                                    <span style="color: var(--iucn-cr); font-weight: 600;">CR - Critically Endangered</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-level-en" checked>
+                                    <span style="color: var(--iucn-en); font-weight: 600;">EN - Endangered</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-level-vu" checked>
+                                    <span style="color: var(--iucn-vu); font-weight: 600;">VU - Vulnerable</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="alert-level-nt">
+                                    <span style="color: var(--iucn-nt); font-weight: 600;">NT - Near Threatened</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Side -->
+                    <div class="alert-simulation-card glass">
+                        <h4 style="font-size:16px; font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="radio-receiver" style="color: var(--accent);"></i>
+                            Alert Simulation Dashboard
+                        </h4>
+                        <p style="font-size:13px; color: var(--text-secondary); margin-bottom:20px;">
+                            Use the quick presets below to simulate new occurrences reported nearby in real-time. If they meet your configured parameters, the monitoring agent will immediately dispatch a conservation alert.
+                        </p>
+
+                        <div class="simulation-presets">
+                            <button class="preset-btn" data-preset="condor">
+                                <h5>
+                                    <i data-lucide="feather" style="color: var(--color-aves);"></i>
+                                    California Condor
+                                </h5>
+                                <p>Aves | Status: CR</p>
+                                <p style="font-size:10px; color: var(--text-muted); margin-top:6px;">Simulate sighting 1.2km away</p>
+                            </button>
+
+                            <button class="preset-btn" data-preset="puma">
+                                <h5>
+                                    <i data-lucide="paw-print" style="color: var(--color-mammalia);"></i>
+                                    Mountain Lion
+                                </h5>
+                                <p>Mammalia | Status: LC</p>
+                                <p style="font-size:10px; color: var(--text-muted); margin-top:6px;">Simulate sighting 3.5km away</p>
+                            </button>
+
+                            <button class="preset-btn" data-preset="seaotter">
+                                <h5>
+                                    <i data-lucide="fish" style="color: var(--color-mammalia);"></i>
+                                    Southern Sea Otter
+                                </h5>
+                                <p>Mammalia | Status: EN</p>
+                                <p style="font-size:10px; color: var(--text-muted); margin-top:6px;">Simulate sighting 4.8km away</p>
+                            </button>
+
+                            <button class="preset-btn" data-preset="redleggedfrog">
+                                <h5>
+                                    <i data-lucide="droplet" style="color: var(--color-amphibia);"></i>
+                                    Red-legged Frog
+                                </h5>
+                                <p>Amphibia | Status: NT</p>
+                                <p style="font-size:10px; color: var(--text-muted); margin-top:6px;">Simulate sighting 0.8km away</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- TOAST ALERTS CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- SPECIES DETAIL MODAL -->
+    <div class="modal-overlay" id="species-modal">
+        <div class="modal-card">
+            <div class="modal-header-img" id="modal-image" style="background-image: url('');">
+                <div class="modal-close-btn" id="modal-close">
+                    <i data-lucide="x"></i>
+                </div>
+                <div class="modal-header-overlay">
+                    <div class="modal-title-row">
+                        <div>
+                            <h2 id="modal-common-name">Mountain Lion</h2>
+                            <p id="modal-scientific-name">Puma concolor</p>
+                        </div>
+                        <span class="badge-status" id="modal-status-badge" style="background-color: var(--iucn-lc);">Least Concern</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-info-column">
+                    <div class="info-block">
+                        <h4>Species Description & Habitat</h4>
+                        <p id="modal-description">Loading description from Wikipedia database...</p>
+                    </div>
+                </div>
+                
+                <div class="modal-stats-column">
+                    <div class="stat-item">
+                        <span class="stat-label">Class</span>
+                        <span class="stat-val" id="modal-class">Mammalia</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Sighting Date</span>
+                        <span class="stat-val" id="modal-date">2026-07-16</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Latitude</span>
+                        <span class="stat-val" id="modal-lat">37.7749</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Longitude</span>
+                        <span class="stat-val" id="modal-lng">-122.4194</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">External Database</span>
+                        <span class="stat-val" id="modal-link" style="color: var(--accent); cursor: pointer; text-decoration: underline;">iNaturalist Occur</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+            
+    <!-- Leaflet Marker Cluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Application Logic Scripts -->
+    <script src="agent.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

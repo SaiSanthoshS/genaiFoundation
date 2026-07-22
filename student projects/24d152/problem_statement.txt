@@ -1,0 +1,3 @@
+Smart To-Do Prioritiser
+Agent: When user pastes a free-text task dump, the agent extracts individual tasks, identifies deadlines and dependencies, scores each task by urgency and impact, finds available time slots in the user's calendar, and auto-schedules each task into a realistic daily plan.
+Frontend: Task Dump Input — multi-line text area; "Prioritise" button sends text to the agent | Prioritised Kanban Board — agent-sorted columns for Today / This Week / Later, with urgency scores on each card | Calendar View — tasks mapped to agent-selected time slots; user can drag to override | Productivity Dashboard — agent-tracked completion rate, streak, and focus hours over time

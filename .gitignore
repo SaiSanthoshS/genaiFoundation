@@ -3,3 +3,10 @@ data/db.json
 .env
 *.log
 .DS_Store
+.env
+modules/.env
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+modules/.log_*.txt

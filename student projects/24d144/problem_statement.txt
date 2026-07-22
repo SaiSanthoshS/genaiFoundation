@@ -1,0 +1,3 @@
+Charity Impact Evaluator
+Agent: When user selects a cause area, the agent fetches registered charities, parses their impact metrics and financial reports, calculates cost-per-outcome for each, ranks by effectiveness, and compares the user's potential donation options.
+Frontend: Cause Selector Page — category cards (health, education, climate); clicking triggers the agent | Charity Comparison Table — agent-ranked results with impact score, overhead percentage, and cost-per-outcome | Charity Detail Page — agent-extracted mission, financials, and impact data with a link to the annual report | My Donations Tracker — user logs donations; the agent estimates total real-world impact achieved

@@ -1,0 +1,3 @@
+Crypto Portfolio Tracker & Rebalancer
+Agent: When user inputs their holdings, the agent fetches live prices, calculates the current allocation percentage, pulls cryptocurrency news, scores sentiment per coin, detects when the portfolio drifts from the user's target allocation, and sends a rebalance alert.
+Frontend: Portfolio Input Page — coin names and quantities; "Track Portfolio" triggers the agent | Live Dashboard — agent-updated donut chart of allocation and a 24-hour change table | Sentiment Panel — agent-scored news items per coin with bullish/bearish labels | Rebalance Wizard — agent-suggested trades shown as a step-by-step list; user confirms or rejects each
