@@ -1,0 +1,3 @@
+Language Learning Adaptive Tutor
+Agent: When user sets their target language and level, the agent builds a vocabulary list, fetches pronunciation audio, creates exercises (fill-in-the-blank, translation, listening), scores the user's responses, adapts difficulty based on performance, and schedules the next session using spaced repetition.
+Frontend: Language Setup Page — target language and current level; "Start Learning" triggers the agent | Lesson Interface — agent-generated flashcard, audio button, and exercise; submitting an answer triggers the agent's scoring | Progress Dashboard — agent-tracked words learned, mastery heatmap, and daily streak | Review Queue Page — agent-scheduled due words for today shown with overdue indicators in red

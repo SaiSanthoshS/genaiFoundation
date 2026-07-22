@@ -1,0 +1,3 @@
+Customer Support Ticket Auto-Classifier
+Agent: When user uploads a ticket dataset or a new ticket arrives, the agent applies an NLP classifier to assign a category and priority to each ticket, calculates the risk of SLA breach based on creation time and average resolution time, and routes the ticket to the appropriate support queue.
+Frontend: Dataset Upload / Live Ticket Input — CSV upload or manual entry triggers the agent | Ticket List — agent-assigned category tag, priority badge, and SLA countdown on each row | Classification Accuracy Dashboard — agent-reported precision and recall per category as a confusion matrix | Queue View — tickets grouped by agent-assigned category | SLA Risk Alert Panel — agent-flagged tickets at risk of breaching SLA, sorted by urgency

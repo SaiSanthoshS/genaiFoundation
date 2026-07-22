@@ -1,0 +1,3 @@
+Carbon Footprint Calculator & Advisor
+Agent: When user logs daily activities (transport, meals, energy use), the agent calculates carbon emissions per activity using regional energy intensity data, compares the total to national averages, ranks reduction actions by impact, and surfaces relevant carbon offset projects.
+Frontend: Daily Activity Logger — transport mode, meal type, and energy inputs; submitting each entry triggers the agent | Footprint Dashboard — agent-calculated donut chart broken down by category | Reduction Tips Panel — agent-ranked actions sorted by tonnes of CO₂ saved | Offset Marketplace — agent-matched projects with cost per tonne and a donate button

@@ -1,0 +1,3 @@
+Crowdfunding Campaign Analyser
+Agent: When user submits a campaign URL, the agent fetches live funding statistics, scrapes social media mentions, scores the sentiment of public discussion, runs a success probability model trained on historical campaign data, and compares the campaign to similar past campaigns.
+Frontend: Campaign URL Input — submitting triggers the agent | Analysis Dashboard — agent-calculated funding progress gauge, social buzz score, and predicted success percentage | Competitor Comparison Table — agent-selected similar campaigns with outcome data | Insight Report Page — agent-written key findings and actionable recommendations, exportable as PDF

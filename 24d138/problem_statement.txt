@@ -1,0 +1,3 @@
+Election Results Live Tracker
+Agent: When user selects a region, the agent streams official results as they are declared, aggregates votes by party and constituency, calculates swing from the previous election, scores news sentiment per party, detects upsets, and pushes live update notifications.
+Frontend: Region Selector Page — clicking a region or entering a constituency triggers the agent | National Results Map — constituencies coloured in real time by the agent as results come in | Party Leaderboard — agent-calculated seats, vote share, and swing indicators updated live | Constituency Drill-Down — user clicks a seat; agent shows candidate breakdown and historical comparison | Live Update Feed — agent-timestamped result cards appearing as declarations happen

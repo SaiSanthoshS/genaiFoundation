@@ -1,0 +1,3 @@
+Stock Portfolio Monitor & Advisor
+Agent: When user inputs their holdings, the agent fetches live prices, calculates profit/loss per stock, pulls related financial news, scores the sentiment of each news item against each stock, flags high-risk positions, and sends an alert when a loss threshold is breached.
+Frontend: Portfolio Input Page — user adds tickers and quantities, clicks "Start Monitoring" | Live Dashboard — agent-updated P&L table with sparklines and red/green risk indicators | News Sentiment Panel — agent-classified news feed per stock with bullish/bearish gauge | Alert Config Modal — user sets loss thresholds; agent triggers email/SMS when conditions are met

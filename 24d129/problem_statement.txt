@@ -1,0 +1,3 @@
+Wikipedia Knowledge Graph Explorer
+Agent: When user enters a seed topic, the agent fetches the article, extracts all named entities, recursively fetches each entity's article, maps relationships between them, builds a navigable knowledge graph, and enables semantic search across the entire graph.
+Frontend: Topic Seed Input — entering a topic and clicking "Build Graph" triggers the agent | Interactive Force-Directed Graph — agent-built network; clicking a node expands it by running the agent on that entity | Entity Detail Sidebar — agent-fetched summary and links for the selected node | Semantic Search Bar — user types a question; the agent searches across the built graph and highlights matching nodes

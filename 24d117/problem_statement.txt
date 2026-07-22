@@ -1,0 +1,3 @@
+Traffic Incident & Commute Planner
+Agent: When user saves their home and office addresses, the agent fetches real-time traffic incidents, calculates estimated travel time for driving versus public transit, optimises the route, detects unusual congestion patterns, and sends a departure alert 30 minutes before estimated bad traffic.
+Frontend: Route Setup Page — origin, destination, and usual departure time; "Plan My Commute" activates the agent | Live Traffic Map — agent-overlaid incident markers on the user's route | Commute Time Comparison — agent-estimated durations for drive, transit, and cycle with live ETAs | Alert Scheduler — user sets weekdays; agent sends push notification at the calculated departure window

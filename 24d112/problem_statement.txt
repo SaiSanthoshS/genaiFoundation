@@ -1,0 +1,3 @@
+Smart Irrigation & Farm Advisor
+Agent: When farmer inputs their location and crops, the agent fetches soil moisture readings, pulls a 7-day weather forecast, calculates daily water requirements using an evapotranspiration model, builds an irrigation schedule, and scans crop disease advisories to flag any threats.
+Frontend: Farm Setup Page — location, crop type, and soil type; "Generate Schedule" triggers the agent | Irrigation Schedule Calendar — agent-computed daily water amounts with on/off toggle per zone | Weather Widget — 7-day forecast fetched by the agent with rain probability bars | Disease Advisory Panel — agent-detected crop-specific threat alerts with recommended actions | Water Usage Chart — agent-tracked cumulative usage vs optimal target
