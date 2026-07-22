@@ -1,0 +1,3 @@
+Fake News Detector
+Agent: When user submits an article URL or pasted text, the agent extracts the key claims, queries fact-checking databases for prior verdicts on those claims, scores the credibility of the source, cross-references the story against reports from reputable outlets, and produces a credibility verdict with reasoning.
+Frontend: Article URL / Text Input — submission triggers the agent | Claim List — agent-extracted statements each annotated with a fact-check verdict (true / false / disputed) | Source Credibility Gauge — agent-scored trustworthiness of the publication | Cross-Reference Panel — agent-found coverage of the same story in reputable outlets | Credibility Score Card — overall agent verdict with a plain-language explanation; share button included
