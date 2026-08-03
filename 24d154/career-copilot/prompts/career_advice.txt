@@ -1,0 +1,52 @@
+Provide personalized career advice for the following candidate.
+
+Candidate Profile:
+- Current Skills: {{CANDIDATE_SKILLS}}
+- Experience: {{CANDIDATE_EXPERIENCE}}
+- Education: {{CANDIDATE_EDUCATION}}
+- Years of Experience: {{YEARS_EXPERIENCE}}
+- Target Roles: {{TARGET_ROLES}}
+
+Return a JSON object:
+{
+    "skills_to_learn": [
+        {
+            "skill": "Skill name",
+            "priority": "high|medium|low",
+            "reason": "Why this skill matters for their career goals"
+        }
+    ],
+    "recommended_courses": [
+        {
+            "name": "Course name",
+            "platform": "Coursera|Udemy|edX|YouTube|etc",
+            "url": "URL if known, otherwise empty",
+            "reason": "Why this course is recommended"
+        }
+    ],
+    "certifications": [
+        {
+            "name": "Certification name",
+            "provider": "AWS|Google|etc",
+            "difficulty": "beginner|intermediate|advanced",
+            "value": "Why this cert adds value"
+        }
+    ],
+    "career_roadmap": [
+        {
+            "timeframe": "0-3 months|3-6 months|6-12 months|1-2 years",
+            "goal": "What to achieve",
+            "actions": ["action1", "action2"]
+        }
+    ],
+    "industry_insights": "Current market trends and demand for their skill set",
+    "salary_estimate": "Estimated salary range based on skills and experience"
+}
+
+Rules:
+- Be specific — recommend actual course names and platforms
+- Prioritize FREE resources when possible
+- Career roadmap should be realistic and actionable
+- Consider the candidate's current level when recommending next steps
+- Include both technical and soft skill recommendations
+- Return ONLY valid JSON

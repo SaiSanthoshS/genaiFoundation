@@ -1,0 +1,107 @@
+# Architecture
+
+## System Architecture
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                    Frontend (SPA)                        │
+│  ┌─────┐ ┌──────────┐ ┌──────┐ ┌────────┐ ┌──────────┐ │
+│  │Auth │ │Resume    │ │Jobs  │ │Cover   │ │Kanban    │ │
+│  │Page │ │Upload    │ │Board │ │Letter  │ │Tracker   │ │
+│  └─────┘ └──────────┘ └──────┘ └────────┘ └──────────┘ │
+└────────────────────────┬─────────────────────────────────┘
+                         │ HTTP/REST
+┌────────────────────────▼─────────────────────────────────┐
+│              FastAPI Backend (Python)                     │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │                  API Routers                      │    │
+│  │  auth │ resume │ jobs │ cover_letter │ interview  │    │
+│  │  applications │ analytics │ notifications         │    │
+│  └──────────┬───────────────────────────────────────┘    │
+│             │                                            │
+│  ┌──────────▼───────────────────────────────────────┐    │
+│  │              Service Layer                        │    │
+│  │  resume_parser │ ats_analyzer │ job_aggregator    │    │
+│  │  job_matcher │ cover_letter_gen │ resume_tailor   │    │
+│  │  interview_coach │ career_advisor │ vector_store  │    │
+│  └──────────┬───────────────────────────────────────┘    │
+│             │                                            │
+│  ┌──────────▼───────────────────────────────────────┐    │
+│  │         LangGraph Agent Pipeline                  │    │
+│  │  parse → ATS → search → match → cover letter     │    │
+│  │                          → tailor → interview     │    │
+│  │                          → career advice          │    │
+│  └──────────────────────────────────────────────────┘    │
+└────────────┬────────────────────┬────────────────────────┘
+             │                    │
+    ┌────────▼──────┐    ┌───────▼────────┐
+    │  SQLite DB    │    │  Groq API      │
+    │  (SQLAlchemy) │    │  (LLM calls)   │
+    │               │    │                │
+    │  Users        │    │  Llama 3.3 70B │
+    │  Resumes      │    │  Llama 3.1 8B  │
+    │  Jobs         │    └────────────────┘
+    │  Applications │
+    │  ...          │    ┌────────────────┐
+    └───────────────┘    │  ChromaDB      │
+                         │  (Vectors)     │
+    ┌───────────────┐    └────────────────┘
+    │  Job APIs     │
+    │  RemoteOK     │    ┌────────────────┐
+    │  Remotive     │    │  File Storage  │
+    │  Arbeitnow    │    │  (Local Disk)  │
+    └───────────────┘    └────────────────┘
+```
+
+## LangGraph Pipeline
+
+```
+           ┌──────────────┐
+           │ parse_resume │
+           └──────┬───────┘
+                  │
+           ┌──────▼───────┐
+           │ ats_analysis  │
+           └──────┬───────┘
+                  │
+           ┌──────▼───────┐
+           │ search_jobs   │
+           └──────┬───────┘
+                  │
+           ┌──────▼───────┐
+           │ match_jobs    │
+           └──────┬───────┘
+                  │
+         ┌────────┴────────┐
+         │ has top match?  │
+         └───┬─────────┬───┘
+          Yes│         │No
+   ┌────────▼───┐     │
+   │cover_letter│     │
+   └────────┬───┘     │
+            │         │
+   ┌────────▼───┐     │
+   │tailor_resume│    │
+   └────────┬───┘     │
+            │         │
+   ┌────────▼────┐    │
+   │interview_prep│   │
+   └────────┬────┘    │
+            │         │
+   ┌────────▼────┐    │
+   │career_advice │   │
+   └────────┬────┘    │
+            │         │
+            ▼         ▼
+           END       END
+```
+
+## Data Flow
+
+1. **User uploads resume** → PDF/DOCX text extraction → Groq LLM parsing → Structured JSON
+2. **ATS analysis** → Resume JSON → Groq LLM scoring → Score + feedback
+3. **Job search** → Parallel API calls to 3+ boards → Dedup → Store in DB
+4. **AI matching** → Candidate vector → ChromaDB similarity → Groq LLM scoring → Ranked results
+5. **Cover letter** → Resume + Job data → Groq LLM → Personalized letter
+6. **Interview prep** → Resume + Job → Groq LLM → Questions + STAR answers
+7. **Tracker** → User-managed Kanban → SQLite persistence

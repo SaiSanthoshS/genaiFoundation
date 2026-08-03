@@ -1,0 +1,33 @@
+Generate interview preparation questions for a candidate applying to a specific role.
+
+Candidate:
+- Skills: {{CANDIDATE_SKILLS}}
+- Experience: {{CANDIDATE_EXPERIENCE}}
+
+Target Job:
+- Title: {{JOB_TITLE}}
+- Company: {{COMPANY_NAME}}
+- Requirements: {{JOB_REQUIREMENTS}}
+
+Question types to generate: {{QUESTION_TYPES}}
+
+Return a JSON object:
+{
+    "questions": [
+        {
+            "type": "hr|technical|behavioral",
+            "question": "The interview question",
+            "sample_answer": "A strong sample answer using STAR method where applicable",
+            "tips": "Tips for answering this specific question well"
+        }
+    ]
+}
+
+Rules:
+- Generate 3-4 questions per type requested
+- For TECHNICAL questions: focus on the specific skills and technologies listed
+- For BEHAVIORAL questions: use "Tell me about a time when..." format
+- For HR questions: include salary negotiation, culture fit, career goals
+- Sample answers should be specific and reference the candidate's actual experience
+- Tips should be actionable and concrete
+- Return ONLY valid JSON

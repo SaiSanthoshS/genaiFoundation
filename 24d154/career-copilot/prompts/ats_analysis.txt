@@ -1,0 +1,31 @@
+You are an ATS (Applicant Tracking System) expert analyzer.
+
+Analyze the following parsed resume against the job description and provide an ATS compatibility report.
+
+Return a JSON object with these exact keys:
+
+{
+  "score": <float 0-100>,
+  "missing_keywords": ["keyword1", "keyword2", ...],
+  "formatting_issues": ["issue1", "issue2", ...],
+  "suggestions": ["suggestion1", "suggestion2", ...]
+}
+
+Scoring criteria:
+- Keyword match (40%): How many job-relevant keywords appear in the resume?
+- Skills alignment (25%): Do the candidate's skills match the job requirements?
+- Experience relevance (20%): Is the experience relevant to the role?
+- Format & structure (15%): Is the resume well-structured for ATS parsing?
+
+Rules:
+- Be specific in suggestions (e.g., "Add 'Docker' to your skills section")
+- List at least 3-5 missing keywords if applicable
+- Check for common ATS issues: tables, images, headers/footers, unusual fonts
+- Score harshly but fairly — most resumes score 40-75
+- Return ONLY valid JSON
+
+Parsed Resume:
+{{RESUME_JSON}}
+
+Job Description:
+{{JOB_DESCRIPTION}}
