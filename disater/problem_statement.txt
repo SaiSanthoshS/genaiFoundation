@@ -1,0 +1,3 @@
+Disaster Alert Aggregator
+Agent: When user registers their location, the agent continuously monitors earthquake feeds and severe weather alert services, calculates the proximity and severity of each event relative to the user, and sends a real-time push notification whenever a threat is detected nearby.
+Frontend: Location Setup Page — address input and alert radius slider; "Activate Monitoring" starts the agent | Live Alert Map — global map updated by the agent in real time with colour-coded severity markers | Alert Feed — chronological list of agent-detected events with type and distance | Alert History Dashboard — weekly chart of events detected by the agent in the user's area
